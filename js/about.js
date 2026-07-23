@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     onEnter: () => document.querySelector("[data-reveal]").classList.add("revealed"),
   });
 
-  gsap.utils.toArray(".about-section, .about-links, .about-founder").forEach((el) => {
+  gsap.utils.toArray(".about-section, .about-links").forEach((el) => {
     gsap.fromTo(
       el,
       { opacity: 0, y: 30 },
