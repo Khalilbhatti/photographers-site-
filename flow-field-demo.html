@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flow Field Background — Demo (standalone, not wired into the site)</title>
+    <link rel="stylesheet" href="css/flow-field-background.css" />
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="hero-bg" style="width: 100%; height: 100vh"></div>
+
+    <script src="js/flow-field-background.js"></script>
+    <script>
+      createFlowFieldBackground(document.getElementById("hero-bg"), {
+        color: "#818cf8", // Indigo-400
+        trailOpacity: 0.1, // Lower = longer trails
+        particleCount: 600,
+        speed: 0.8,
+      });
+    </script>
+  </body>
+</html>

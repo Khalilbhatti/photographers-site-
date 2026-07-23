@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery Playground — M Khalil Ur Rehman</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjIiIHZpZXdCb3g9IjAgMCAyNCAyMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMjMuOTk4NSAwQzEzLjY0ODcgNS43NTU5MyAxMC4zNDgzIDUuNzU1OTMgMS45MDczNWUtMDYgLTEuMDQ5MDdlLTA2QzYuMjc3MyA5LjQ4NjUyIDYuMjc3MyAxMi41MTM1IDkuNDU2OThlLTA3IDIyQzEwLjM0OTggMTYuMjQ1NSAxMy42NTAyIDE2LjI0NTUgMjQgMjJDMTcuNzIxMiAxMi41MTM1IDE3LjcyMTIgOS40ODc5IDIzLjk5ODUgMFoiIGZpbGw9ImJsYWNrIiAvPgo8L3N2Zz4="
+    />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/gallery.css" />
+  </head>
+  <body class="theme-dark">
+    <div id="loader">
+      <h4>LOADING</h4>
+      <div id="loader-mark"></div>
+      <h4 id="loader-number">0%</h4>
+    </div>
+
+    <nav class="site-nav">
+      <a href="index.html" class="nav-logo">M Khalil<br />Ur Rehman</a>
+      <div class="nav-meta">
+        <div>
+          <h4>PHOTOGRAPHER FROM</h4>
+          <h4>FRANCE, BASED IN PARIS</h4>
+        </div>
+        <div>
+          <h4>LAST UPDATE</h4>
+          <h4>FEB 2026</h4>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" data-route="index.html" class="link">INDEX,</a>
+        <a href="works.html" data-route="works.html" class="link">WORK,</a>
+        <a href="gallery.html" data-route="gallery.html" class="link">GALLERY,</a>
+        <a href="about.html" data-route="about.html" class="link">ABOUT</a>
+      </div>
+    </nav>
+
+    <main class="gallery-stage">
+      <canvas id="galleryCanvas"></canvas>
+      <div class="gallery-scrim" id="galleryScrim"></div>
+
+      <div class="gallery-overlay" id="galleryOverlay">
+        <h1 class="gallery-title">Gallery<br />Playground</h1>
+        <div class="draw-shape" id="drawShape">
+          <svg id="drawSvg" viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg">
+            <path
+              id="drawPathTrack"
+              class="draw-path-track"
+              d="M23.9985 0C13.6487 5.75593 10.3483 5.75593 1.90735e-06 -1.04907e-06C6.2773 9.48652 6.2773 12.5135 9.45698e-07 22C10.3498 16.2455 13.6502 16.2455 24 22C17.7212 12.5135 17.7212 9.4879 23.9985 0Z"
+            />
+            <g id="drawDots"></g>
+          </svg>
+        </div>
+        <span class="draw-hint">DRAW ME TO OPEN PLAYGROUND</span>
+      </div>
+
+      <div class="ruler">
+        <div class="ruler-track" id="rulerTrack"></div>
+      </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/gallery.js"></script>
+  </body>
+</html>

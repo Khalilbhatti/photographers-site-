@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About — M Khalil Ur Rehman</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjIiIHZpZXdCb3g9IjAgMCAyNCAyMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMjMuOTk4NSAwQzEzLjY0ODcgNS43NTU5MyAxMC4zNDgzIDUuNzU1OTMgMS45MDczNWUtMDYgLTEuMDQ5MDdlLTA2QzYuMjc3MyA5LjQ4NjUyIDYuMjc3MyAxMi41MTM1IDkuNDU2OThlLTA3IDIyQzEwLjM0OTggMTYuMjQ1NSAxMy42NTAyIDE2LjI0NTUgMjQgMjJDMTcuNzIxMiAxMi41MTM1IDE3LjcyMTIgOS40ODc5IDIzLjk5ODUgMFoiIGZpbGw9ImJsYWNrIiAvPgo8L3N2Zz4="
+    />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/about.css" />
+    <link rel="stylesheet" href="css/flow-field-background.css" />
+  </head>
+  <body class="theme-dark">
+    <div id="ambientBg" class="flow-field-bg--ambient"></div>
+
+    <div id="loader">
+      <h4>LOADING</h4>
+      <div id="loader-mark"></div>
+      <h4 id="loader-number">0%</h4>
+    </div>
+
+    <nav class="site-nav">
+      <a href="index.html" class="nav-logo">M Khalil<br />Ur Rehman</a>
+      <div class="nav-meta">
+        <div>
+          <h4>PHOTOGRAPHER FROM</h4>
+          <h4>FRANCE, BASED IN PARIS</h4>
+        </div>
+        <div>
+          <h4>LAST UPDATE</h4>
+          <h4>FEB 2026</h4>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" data-route="index.html" class="link">INDEX,</a>
+        <a href="works.html" data-route="works.html" class="link">WORK,</a>
+        <a href="gallery.html" data-route="gallery.html" class="link">GALLERY,</a>
+        <a href="about.html" data-route="about.html" class="link">ABOUT</a>
+      </div>
+    </nav>
+
+    <main>
+      <div class="about-hero">
+        <img
+          class="about-hero-fallback"
+          src="images/about-hero-photo.png"
+          alt="M Khalil Ur Rehman portrait"
+        />
+        <canvas id="depthCanvas" aria-hidden="true"></canvas>
+      </div>
+
+      <section class="about-body">
+        <div class="info-pill">INFO</div>
+        <p class="bio-text">
+          <span class="lead">M Khalil Ur Rehman is a Paris-based portrait photographer</span>
+          <span class="fade" data-reveal
+            >known for striking, editorial-driven imagery. His work blends raw
+            emotion with a bold visual language, distilling each subject down
+            to something honest and unmistakably his own.</span
+          >
+        </p>
+      </section>
+
+      <div class="about-founder">
+        <img src="images/placeholders/about-founder.svg" alt="M Khalil Ur Rehman" />
+      </div>
+
+      <section class="about-section">
+        <div class="tag-pill">CLIENTS</div>
+        <div class="section-columns">
+          <ul>
+            <li>Adidas</li>
+            <li>Asics</li>
+            <li>Oppo</li>
+            <li>Visionnaire</li>
+            <li>Santacruz</li>
+            <li>Mobilize</li>
+            <li>Braave</li>
+          </ul>
+          <ul>
+            <li>Cloud</li>
+            <li>DJ Dre Tala</li>
+            <li>Hoshi</li>
+            <li>Le Motif</li>
+            <li>13 Block</li>
+            <li>Earvinho Kawazaki</li>
+            <li>Malo</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="about-section">
+        <div class="tag-pill">CREDITS</div>
+        <div class="credits-columns">
+          <div class="credit-block">
+            <h4>Development</h4>
+            <a href="#" class="link">@mkhalilurrehman ↗</a>
+          </div>
+          <div class="credit-block">
+            <h4>Art Direction</h4>
+            <a href="#" class="link">@mkhalilurrehman ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-links">
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="pill-btn">
+          <span class="pill-fill"></span>
+          <span class="pill-label">Instagram</span>
+          <span class="pill-arrow">↗</span>
+        </a>
+        <a href="mailto:hello@mkhalilurrehman.com" class="pill-btn">
+          <span class="pill-fill"></span>
+          <span class="pill-label">Email</span>
+          <span class="pill-arrow">↗</span>
+        </a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>©M KHALIL UR REHMAN</span>
+      <img class="footer-mark" src="images/svg-star-white.svg" alt="" />
+      <span>LAST UPDATE : FEB 2026</span>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/depth.js"></script>
+    <script src="js/about.js"></script>
+    <script src="js/flow-field-background.js"></script>
+    <script>
+      // Dark-mode ambient texture behind the bio/clients/credits sections.
+      // The hero already has its own depth-map canvas, so this only
+      // needs to cover the page — it'll simply sit unseen behind the hero.
+      createFlowFieldBackground(document.getElementById("ambientBg"), {
+        color: "#ffffff",
+        background: "#0d0d0d",
+        trailOpacity: 0.12,
+        particleCount: 220,
+        speed: 0.6,
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>M Khalil Ur Rehman — Portfolio</title>
+    <meta
+      name="description"
+      content="M Khalil Ur Rehman is a portrait photographer based in Paris."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjIiIHZpZXdCb3g9IjAgMCAyNCAyMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMjMuOTk4NSAwQzEzLjY0ODcgNS43NTU5MyAxMC4zNDgzIDUuNzU1OTMgMS45MDczNWUtMDYgLTEuMDQ5MDdlLTA2QzYuMjc3MyA5LjQ4NjUyIDYuMjc3MyAxMi41MTM1IDkuNDU2OThlLTA3IDIyQzEwLjM0OTggMTYuMjQ1NSAxMy42NTAyIDE2LjI0NTUgMjQgMjJDMTcuNzIxMiAxMi41MTM1IDE3LjcyMTIgOS40ODc5IDIzLjk5ODUgMFoiIGZpbGw9ImJsYWNrIiAvPgo8L3N2Zz4="
+    />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="css/flow-field-background.css" />
+  </head>
+  <body>
+    <div id="ambientBg" class="flow-field-bg--ambient"></div>
+
+    <div id="loader">
+      <h4>LOADING</h4>
+      <div id="loader-mark"></div>
+      <h4 id="loader-number">0%</h4>
+    </div>
+
+    <nav class="site-nav">
+      <a href="index.html" class="nav-logo">M Khalil<br />Ur Rehman</a>
+      <div class="nav-meta">
+        <div>
+          <h4>PHOTOGRAPHER FROM</h4>
+          <h4>FRANCE, BASED IN PARIS</h4>
+        </div>
+        <div>
+          <h4>LAST UPDATE</h4>
+          <h4>FEB 2026</h4>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" data-route="index.html" class="link">INDEX,</a>
+        <a href="works.html" data-route="works.html" class="link">WORK,</a>
+        <a href="gallery.html" data-route="gallery.html" class="link">GALLERY,</a>
+        <a href="about.html" data-route="about.html" class="link">ABOUT</a>
+      </div>
+    </nav>
+
+    <div id="cardHoverPrompt" class="card-hover-prompt">
+      <span class="card-hover-prompt__icon">✦</span>
+      OPEN THE PROJECT
+    </div>
+
+    <main id="main">
+      <p class="copyright-note">
+        ALL PICTURES ON THIS SITE ARE PROTECTED BY COPYRIGHT
+      </p>
+
+      <section class="home-grid">
+        <div class="grid-row row-1">
+          <div class="g-img"><img src="images/3g0a9005.webp" alt="Editorial portrait" /></div>
+        </div>
+        <div class="grid-row row-2">
+          <div class="g-img"><img src="images/AVE20231220_18444255_0090.webp" alt="Portrait" /></div>
+        </div>
+        <div class="grid-row row-3">
+          <div class="g-img"><img src="images/ELECTRICK-1.webp" alt="Editorial" /></div>
+        </div>
+        <div class="grid-row row-4">
+          <div class="g-img a"><img src="images/LARELEVE-1.webp" alt="Portrait" /></div>
+          <div class="g-img b"><img src="images/LARELEVE-5.webp" alt="Portrait" /></div>
+        </div>
+        <div class="grid-row row-5">
+          <div class="g-img"><img src="images/come-up-img1.webp" alt="Editorial" /></div>
+        </div>
+        <div class="grid-row row-6">
+          <div class="g-img"><img src="images/come-up-img2.webp" alt="Portrait" /></div>
+        </div>
+        <div class="grid-row row-7">
+          <div class="g-img a"><img src="images/denzelcurry14822.webp" alt="Portrait" /></div>
+          <div class="g-img b"><img src="images/peugeot_153.webp" alt="Editorial" /></div>
+        </div>
+      </section>
+
+      <section class="selected-projects" id="selectedProjects"></section>
+
+      <section class="home-footer-links">
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="pill-btn">
+          <span class="pill-fill"></span>
+          <span class="pill-label">Instagram</span>
+          <span class="pill-arrow">↗</span>
+        </a>
+        <a href="mailto:hello@mkhalilurrehman.com" class="pill-btn">
+          <span class="pill-fill"></span>
+          <span class="pill-label">Email</span>
+          <span class="pill-arrow">↗</span>
+        </a>
+      </section>
+
+      <footer class="site-footer">
+        <span>©M KHALIL UR REHMAN</span>
+        <img class="footer-mark" src="images/svg-star.svg" alt="" />
+        <span>LAST UPDATE : FEB 2026</span>
+      </footer>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="js/project-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/flow-field-background.js"></script>
+    <script>
+      // Light-mode ambient texture: white bg, near-black dust, very
+      // understated so it never competes with the hero type or grid.
+      createFlowFieldBackground(document.getElementById("ambientBg"), {
+        color: "#111111",
+        background: "#ffffff",
+        trailOpacity: 0.25,
+        particleCount: 380,
+        speed: 0.5,
+        size: 2.6,
+      });
+    </script>
+  </body>
+</html>

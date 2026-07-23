@@ -1,0 +1,259 @@
+.copyright-note {
+  margin: 8vw 0 4vw;
+  padding-left: 1.9vw;
+  font-size: 0.8vw;
+  line-height: 1.4;
+  color: var(--gray-dark);
+  max-width: 16vw;
+}
+
+/* On the home page only, the nav logo itself opens hero-sized and
+   shrinks into its normal nav-corner size as the user scrolls (home.js
+   scrubs font-size back down to base.css's 1.1vw). It's the same fixed
+   element throughout, not a separate hero heading, so the "shrink into
+   the corner" read comes for free without duplicating the name. */
+.site-nav .nav-logo {
+  font-size: 8.5vw;
+  line-height: 0.86;
+}
+
+/* Staggered editorial grid, built from simple flex rows w/ offsets */
+.grid-row {
+  display: flex;
+  width: 100%;
+  padding: 0 1.9vw;
+}
+
+.grid-row + .grid-row {
+  margin-top: -2vw;
+}
+
+.g-img {
+  position: relative;
+  overflow: hidden;
+  background: #eee;
+}
+
+/* Scroll parallax (yPercent drift) and hover-zoom both live on this
+   wrapper, driven entirely through GSAP; the <img> inside gets its own,
+   separate GSAP-owned entrance scale. Keeping each transform on its own
+   element (rather than mixing a CSS `transition` with GSAP's inline
+   writes on the same element) avoids the two silently overriding
+   each other. */
+.g-img-target {
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.g-img-target img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  will-change: transform;
+}
+
+.row-1 {
+  justify-content: flex-end;
+}
+.row-1 .g-img {
+  width: 30%;
+  aspect-ratio: 4/5;
+}
+
+/* `.grid-row.row-N` (not just `.row-N`) so these margin-top overrides
+   properly out-specificity the `.grid-row + .grid-row` default above --
+   a single-class selector loses to that two-class one regardless of
+   source order, which was silently flattening every row's intended
+   vertical rhythm to -2vw (and, for row-7, causing a real overlap with
+   row-6). */
+.grid-row.row-2 {
+  margin-top: -4vw;
+}
+.row-2 .g-img {
+  width: 20%;
+  aspect-ratio: 3/4;
+  margin-left: 8vw;
+}
+
+.row-3 {
+  justify-content: center;
+}
+.row-3 .g-img {
+  width: 24%;
+  aspect-ratio: 4/5;
+}
+
+.row-4 {
+  justify-content: space-between;
+}
+.row-4 .g-img.a {
+  width: 30%;
+  aspect-ratio: 4/5;
+  margin-top: 4vw;
+}
+.row-4 .g-img.b {
+  width: 16%;
+  aspect-ratio: 3/4;
+  margin-top: 8vw;
+}
+
+.grid-row.row-5 {
+  justify-content: flex-end;
+  margin-top: 2vw;
+}
+.row-5 .g-img {
+  width: 22%;
+  aspect-ratio: 4/5;
+  margin-right: 20vw;
+}
+
+.row-6 {
+  margin-top: -2vw;
+}
+.row-6 .g-img {
+  width: 16%;
+  aspect-ratio: 3/4;
+  margin-left: 8vw;
+}
+
+.grid-row.row-7 {
+  justify-content: space-between;
+  margin-top: 4vw;
+}
+.row-7 .g-img.a {
+  width: 26%;
+  aspect-ratio: 4/5;
+}
+.row-7 .g-img.b {
+  width: 22%;
+  aspect-ratio: 4/5;
+  margin-top: 6vw;
+}
+
+/* ---------- Selected projects: ONE pinned container shared by both
+   projects (matches the live site's actual structure: a single
+   pin-spacer, with every project after the first stacked via
+   position:absolute directly on top of the first's box). Only one
+   ScrollTrigger pin exists for the whole section, so there's no
+   unpin/repin moment between projects -- the handoff is a single
+   continuous scroll, never a gap or flash. ---------- */
+.selected-projects {
+  position: relative;
+}
+
+.selected-project {
+  position: relative;
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--near-black);
+  color: var(--white);
+
+  -webkit-mask-image: url("../images/svg-star.svg");
+  mask-image: url("../images/svg-star.svg");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: var(--reveal, 0%);
+  mask-size: var(--reveal, 0%);
+}
+
+.selected-project:not(:first-child) {
+  position: absolute;
+  inset: 0;
+}
+
+/* Protects the fixed nav's legibility over the full-bleed photo without
+   any light/dark theme-switching on the nav itself. */
+.selected-project__scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10vw;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.selected-project__image {
+  position: absolute;
+  inset: 0;
+}
+
+.selected-project__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+}
+
+.selected-project__content {
+  position: absolute;
+  left: 1.9vw;
+  bottom: 3vw;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+  opacity: 0;
+  transform: translateY(2vw);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.selected-project.is-appear .selected-project__content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.selected-project__badges {
+  display: flex;
+  gap: 0.6vw;
+}
+
+.selected-project__title {
+  font-family: var(--display-font);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 5vw;
+  line-height: 0.9;
+}
+
+.home-footer-links {
+  display: flex;
+  gap: 1.2vw;
+  padding: 4vw 1.9vw;
+}
+
+@media (max-width: 768px) {
+  .copyright-note {
+    max-width: none;
+    margin: 24vw 0 4vw;
+  }
+  .grid-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 4vw;
+  }
+  .grid-row + .grid-row {
+    margin-top: 4vw;
+  }
+  .row-1 .g-img,
+  .row-2 .g-img,
+  .row-3 .g-img,
+  .row-4 .g-img.a,
+  .row-4 .g-img.b,
+  .row-5 .g-img,
+  .row-6 .g-img,
+  .row-7 .g-img.a,
+  .row-7 .g-img.b {
+    width: 80%;
+    margin: 0 !important;
+  }
+  .selected-project__title {
+    font-size: 11vw;
+  }
+}

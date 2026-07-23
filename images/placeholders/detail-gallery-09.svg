@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="900" viewBox="0 0 1100 900">
+  <defs>
+    <linearGradient id="gdetail-gallery-09" x1="64%" y1="42%" x2="36%" y2="58%">
+      <stop offset="0%" stop-color="#141414"/>
+      <stop offset="100%" stop-color="#3f7a3f" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="vdetail-gallery-09" cx="50%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.35"/>
+    </radialGradient>
+  </defs>
+  <rect width="1100" height="900" fill="url(#gdetail-gallery-09)"/>
+  <rect width="1100" height="900" fill="url(#vdetail-gallery-09)"/>
+  <g stroke="#3f7a3f" stroke-opacity="0.25" stroke-width="1">
+    <line x1="154" y1="0" x2="-116" y2="900"/><line x1="352" y1="0" x2="82" y2="900"/><line x1="550" y1="0" x2="280" y2="900"/><line x1="748" y1="0" x2="478" y2="900"/><line x1="946" y1="0" x2="676" y2="900"/>
+  </g>
+  <g transform="translate(1064,864)" stroke="#3f7a3f" stroke-width="2" opacity="0.8">
+    <line x1="-10" y1="0" x2="10" y2="0"/>
+    <line x1="0" y1="-10" x2="0" y2="10"/>
+  </g>
+</svg>

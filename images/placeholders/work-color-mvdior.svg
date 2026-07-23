@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1125" viewBox="0 0 900 1125">
+  <defs>
+    <linearGradient id="gwork-color-mvdior" x1="72%" y1="46%" x2="28%" y2="54%">
+      <stop offset="0%" stop-color="#141414"/>
+      <stop offset="100%" stop-color="#5a5f3d" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="vwork-color-mvdior" cx="50%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.35"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="1125" fill="url(#gwork-color-mvdior)"/>
+  <rect width="900" height="1125" fill="url(#vwork-color-mvdior)"/>
+  <g stroke="#5a5f3d" stroke-opacity="0.25" stroke-width="1">
+    <line x1="126" y1="0" x2="-211.5" y2="1125"/><line x1="288" y1="0" x2="-49.5" y2="1125"/><line x1="450" y1="0" x2="112.5" y2="1125"/><line x1="612" y1="0" x2="274.5" y2="1125"/><line x1="774" y1="0" x2="436.5" y2="1125"/>
+  </g>
+  <g transform="translate(864,1089)" stroke="#5a5f3d" stroke-width="2" opacity="0.8">
+    <line x1="-10" y1="0" x2="10" y2="0"/>
+    <line x1="0" y1="-10" x2="0" y2="10"/>
+  </g>
+</svg>

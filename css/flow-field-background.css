@@ -1,0 +1,34 @@
+/* Styling for js/flow-field-background.js — mirrors the original
+   component's Tailwind classes: relative w-full h-full bg-black overflow-hidden */
+.flow-field-bg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+.flow-field-bg__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Site-wide ambient use: sits fixed behind all page content. Everything
+   else in the page markup is unpositioned (or explicitly higher z-index),
+   so normal stacking order alone keeps real content painted above this. */
+.flow-field-bg--ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Real content sits above the ambient layer. .site-nav already has its own
+   position:fixed + z-index:500 in base.css (well above this), so it's
+   deliberately excluded here to avoid overriding that declaration. */
+main,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}

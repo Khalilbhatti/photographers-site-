@@ -1,0 +1,379 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Archivo:wght@600;700;800;900&display=swap");
+
+:root {
+  --primary-font: "Inter", sans-serif;
+  --display-font: "Archivo", sans-serif;
+  --white: #fff;
+  --black: #000;
+  --near-black: #0d0d0d;
+  --gray: #afafaf;
+  --gray-dark: #6b6b6b;
+  --ease: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--primary-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--white);
+  color: var(--black);
+  overflow-x: hidden;
+}
+
+body.theme-dark {
+  background: var(--near-black);
+  color: var(--white);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+/* ---------- Page transition (circular reveal/cover) ---------- */
+#page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: #000;
+  pointer-events: none;
+  clip-path: circle(150% at var(--tx, 50%) var(--ty, 50%));
+  transition: clip-path 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+#page-transition.revealed {
+  clip-path: circle(0% at var(--tx, 50%) var(--ty, 50%));
+}
+
+#page-transition.covering {
+  pointer-events: auto;
+}
+
+/* ---------- Loader ---------- */
+#loader {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  width: 100%;
+  color: #fff;
+  background-color: #000;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.5vw;
+}
+
+#loader h4 {
+  font-size: 0.9vw;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+#loader #loader-number {
+  text-align: right;
+  min-width: 4.5vw;
+  padding: 0.3vw 1.3vw;
+  border-radius: 50px;
+  border: 1px solid #fff;
+}
+
+#loader #loader-mark {
+  height: 3.4vw;
+  width: 3.4vw;
+  background: #fff;
+  -webkit-mask-image: url("../images/svg-star.svg");
+  mask-image: url("../images/svg-star.svg");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  animation: loader-spin 1.6s linear infinite;
+}
+
+@keyframes loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Shared Nav ---------- */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 500;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.6vw 1.9vw;
+  pointer-events: none;
+}
+
+.site-nav > * {
+  pointer-events: auto;
+}
+
+.nav-logo {
+  font-family: var(--display-font);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 1.1vw;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.nav-meta {
+  display: flex;
+  gap: 3vw;
+}
+
+.nav-meta h4 {
+  font-size: 0.78vw;
+  line-height: 1.3;
+  font-weight: 400;
+  color: var(--gray-dark);
+}
+
+.theme-dark .nav-meta h4 {
+  color: var(--gray);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 1.05vw;
+}
+
+.nav-links a {
+  color: var(--gray);
+  transition: color 0.25s var(--ease);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--black);
+}
+
+.theme-dark .nav-links a.active,
+.theme-dark .nav-links a:hover {
+  color: var(--white);
+}
+
+/* ---------- Link underline ---------- */
+.link {
+  position: relative;
+  width: fit-content;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s var(--ease);
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------- Pill button w/ expanding fill ---------- */
+.pill-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5vw;
+  width: fit-content;
+  padding: 0.9vw 2.6vw;
+  border-radius: 6vw;
+  border: 0.13vw solid currentColor;
+  overflow: hidden;
+  transition: padding 0.6s var(--ease);
+}
+
+.pill-btn .pill-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -20vw;
+  height: 20vw;
+  border-radius: 40%;
+  background: var(--black);
+  transition: transform 0.7s var(--ease);
+  z-index: 1;
+}
+
+.theme-dark .pill-btn .pill-fill {
+  background: var(--white);
+}
+
+.pill-btn:hover .pill-fill {
+  transform: translateY(-75%);
+}
+
+.pill-btn .pill-label {
+  position: relative;
+  z-index: 2;
+  font-family: var(--display-font);
+  font-weight: 800;
+  font-size: 2.6vw;
+  transition: color 0.4s var(--ease);
+}
+
+.pill-btn:hover .pill-label {
+  color: var(--white);
+}
+
+.theme-dark .pill-btn:hover .pill-label {
+  color: var(--black);
+}
+
+.pill-btn .pill-arrow {
+  position: relative;
+  z-index: 2;
+  font-size: 2.2vw;
+  transition: transform 0.5s var(--ease), color 0.4s var(--ease);
+}
+
+.pill-btn:hover .pill-arrow {
+  transform: translate(0.2em, -0.2em);
+  color: var(--white);
+}
+
+.theme-dark .pill-btn:hover .pill-arrow {
+  color: var(--black);
+}
+
+/* ---------- Small tag pill ---------- */
+.tag-pill {
+  padding: 0.3vw 0.9vw;
+  border-radius: 3.5vw;
+  border: 1px solid currentColor;
+  font-size: 0.85vw;
+  font-weight: 500;
+  width: fit-content;
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.7vw 1.9vw;
+  font-size: 0.85vw;
+  border-top: 1px solid rgba(128, 128, 128, 0.25);
+}
+
+.site-footer .footer-mark {
+  width: 1.2vw;
+  height: 1.2vw;
+  opacity: 0.7;
+}
+
+/* ---------- Cursor-follow "OPEN THE PROJECT" prompt ----------
+   Shared across any page with hoverable project cards/blocks (works.js,
+   home.js); the page's own JS moves it to the pointer position and
+   toggles .is-visible on enter/leave. */
+.card-hover-prompt {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 450;
+  display: flex;
+  align-items: center;
+  gap: 0.6vw;
+  color: var(--white);
+  text-shadow: 0 0.05vw 0.4vw rgba(0, 0, 0, 0.6), 0 0.15vw 0.6vw rgba(0, 0, 0, 0.4);
+  font-family: var(--display-font);
+  font-weight: 700;
+  font-size: 0.85vw;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.card-hover-prompt.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.card-hover-prompt__icon {
+  font-size: 1.1vw;
+}
+
+@media (max-width: 768px) {
+  .card-hover-prompt {
+    display: none;
+  }
+}
+
+/* ---------- Utility ---------- */
+.o-hidden {
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .nav-meta {
+    display: none;
+  }
+  .nav-links {
+    font-size: 3.2vw;
+  }
+  .nav-logo {
+    font-size: 4vw;
+  }
+  .pill-btn .pill-label {
+    font-size: 7vw;
+  }
+}
