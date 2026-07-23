@@ -92,10 +92,32 @@ function setActiveNav() {
   });
 }
 
+// Smooth (inertial) scrolling site-wide, matching the reference site's own
+// Lenis setup -- without this, every scroll-linked GSAP animation snaps
+// straight to the raw wheel delta, which reads as abrupt/fast no matter how
+// the individual animations themselves are tuned.
+function initSmoothScroll() {
+  if (typeof Lenis === "undefined" || typeof gsap === "undefined") return;
+
+  const lenis = new Lenis({
+    duration: 1.15,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+  });
+  window.lenis = lenis;
+
+  if (typeof ScrollTrigger !== "undefined") {
+    lenis.on("scroll", ScrollTrigger.update);
+  }
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const overlay = createTransitionOverlay();
   overlay.classList.add("covering");
   setActiveNav();
   wireNavTransitions(overlay);
   runLoader(() => revealPage(overlay));
+  initSmoothScroll();
 });
