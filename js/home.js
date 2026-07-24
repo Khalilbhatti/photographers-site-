@@ -5,20 +5,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Nav logo: opens hero-sized (see the 8.5vw override in home.css)
   // and shrinks to its normal fixed-nav size as the user scrolls the
   // first stretch of the page, then stays put. ---
-  gsap.fromTo(
-    ".nav-logo",
-    { fontSize: "8.5vw" },
-    {
-      fontSize: "1.1vw",
-      ease: "none",
-      scrollTrigger: {
-        trigger: "#main",
-        start: "top top",
-        end: "+=600",
-        scrub: true,
-      },
-    }
-  );
+  const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (REDUCED_MOTION) {
+    // Skip the scrub and settle straight to the normal fixed-nav size.
+    gsap.set(".nav-logo", { fontSize: "1.1vw" });
+  } else {
+    gsap.fromTo(
+      ".nav-logo",
+      { fontSize: "8.5vw" },
+      {
+        fontSize: "1.1vw",
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#main",
+          start: "top top",
+          end: "+=600",
+          scrub: true,
+        },
+      }
+    );
+  }
 
   // --- Grid images: each frame gets a wrapper (parallax drift + hover
   // zoom, both GSAP-owned) around the <img> (GSAP-owned entrance scale,
@@ -33,6 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
     target.className = "g-img-target";
     frame.insertBefore(target, img);
     target.appendChild(img);
+
+    if (REDUCED_MOTION) {
+      // Keep the wrapper so layout is identical, but settle straight to the
+      // scale the scrubbed tween would have ended on and skip the drift and
+      // hover zoom entirely.
+      gsap.set(img, { scale: 1.05 });
+      return;
+    }
 
     gsap.fromTo(
       img,

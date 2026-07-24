@@ -1,16 +1,25 @@
 /**
  * FlowFieldBackground — vanilla JS port of a React canvas component.
  *
- * Ported (not wired into any page yet) because this project has no
- * React/TypeScript/Tailwind/shadcn toolchain — it's plain HTML/CSS/JS
- * loaded via <script> tags, same as js/gallery.js and js/depth.js.
- * The original component didn't actually need React: it was a Canvas 2D
- * animation loop wrapped in a useEffect, with props just feeding config
- * into that loop. This does the same thing with a constructor + options.
+ * Ported because this project has no React/TypeScript/Tailwind/shadcn
+ * toolchain — it's plain HTML/CSS/JS loaded via <script> tags, same as
+ * js/gallery.js. The original component didn't actually need React: it was
+ * a Canvas 2D animation loop wrapped in a useEffect, with props just
+ * feeding config into that loop. This does the same thing with a
+ * constructor + options.
  *
- * Usage:
- *   const container = document.querySelector('#hero-bg');
- *   const field = createFlowFieldBackground(container, {
+ * Usage — declarative (what index/works/about.html use). Any element
+ * carrying data-flow-field is initialised automatically on DOMContentLoaded,
+ * which keeps the pages free of inline <script> so they can defer every
+ * script and run under a CSP that forbids inline script:
+ *
+ *   <div id="ambientBg" data-flow-field
+ *        data-color="#111111" data-background="#ffffff"
+ *        data-trail-opacity="0.25" data-particle-count="380"
+ *        data-speed="0.5" data-size="2.6"></div>
+ *
+ * Usage — imperative:
+ *   const field = createFlowFieldBackground(document.querySelector('#hero-bg'), {
  *     color: '#818cf8',
  *     background: '#000000', // extended beyond the original: the source
  *                             // component hardcoded a black trail fill,
@@ -59,6 +68,7 @@ function createFlowFieldBackground(container, options = {}) {
 
   const canvas = document.createElement("canvas");
   canvas.className = "flow-field-bg__canvas";
+  canvas.setAttribute("aria-hidden", "true");
   container.appendChild(canvas);
 
   const ctx = canvas.getContext("2d");
@@ -66,11 +76,18 @@ function createFlowFieldBackground(container, options = {}) {
     throw new Error("createFlowFieldBackground: 2D canvas context unavailable");
   }
 
+  const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   let width = container.clientWidth;
   let height = container.clientHeight;
   let particles = [];
   let animationFrameId = null;
   let destroyed = false;
+  let running = false;
+  // Refreshed once per animation frame rather than on every mousemove:
+  // getBoundingClientRect() is a layout read, and mousemove can fire many
+  // times between two paints.
+  let canvasRect = { left: 0, top: 0 };
   const mouse = { x: -1000, y: -1000 };
 
   class Particle {
@@ -146,8 +163,19 @@ function createFlowFieldBackground(container, options = {}) {
     }
   }
 
+  // One opaque pass with no motion, for prefers-reduced-motion: the field
+  // still provides its texture, it just never animates.
+  function renderStatic() {
+    ctx.fillStyle = config.background;
+    ctx.fillRect(0, 0, width, height);
+    particles.forEach((p) => p.draw(ctx));
+    ctx.globalAlpha = 1;
+  }
+
   function animate() {
-    if (destroyed) return;
+    if (destroyed || !running) return;
+
+    canvasRect = canvas.getBoundingClientRect();
 
     // Semi-transparent fill (instead of clearing) creates the trail look.
     ctx.fillStyle = `rgba(${bgRgb.r}, ${bgRgb.g}, ${bgRgb.b}, ${config.trailOpacity})`;
@@ -161,16 +189,30 @@ function createFlowFieldBackground(container, options = {}) {
     animationFrameId = requestAnimationFrame(animate);
   }
 
+  function start() {
+    if (destroyed || running || REDUCED_MOTION || document.hidden) return;
+    running = true;
+    animationFrameId = requestAnimationFrame(animate);
+  }
+
+  function stop() {
+    running = false;
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  }
+
   function handleResize() {
     width = container.clientWidth;
     height = container.clientHeight;
     init();
+    if (REDUCED_MOTION) renderStatic();
   }
 
   function handleMouseMove(e) {
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
+    mouse.x = e.clientX - canvasRect.left;
+    mouse.y = e.clientY - canvasRect.top;
   }
 
   function handleMouseLeave() {
@@ -178,8 +220,17 @@ function createFlowFieldBackground(container, options = {}) {
     mouse.y = -1000;
   }
 
+  // A backgrounded tab still burns a full rAF loop's worth of CPU (and
+  // battery) on an animation nobody can see.
+  function handleVisibility() {
+    if (document.hidden) stop();
+    else start();
+  }
+
   init();
-  animate();
+  canvasRect = canvas.getBoundingClientRect();
+  if (REDUCED_MOTION) renderStatic();
+  else start();
 
   // Tracked on window/document rather than the container: when this is
   // used as a full-page ambient background (see `.flow-field-bg--ambient`
@@ -188,23 +239,44 @@ function createFlowFieldBackground(container, options = {}) {
   // the container itself never receives mouse events, so listening there
   // would leave the cursor permanently disconnected from the particles.
   window.addEventListener("resize", handleResize);
-  window.addEventListener("mousemove", handleMouseMove);
+  window.addEventListener("mousemove", handleMouseMove, { passive: true });
   document.addEventListener("mouseleave", handleMouseLeave);
+  document.addEventListener("visibilitychange", handleVisibility);
 
   return {
     /** Update color/trailOpacity/particleCount/speed; re-inits particles. */
     update(nextOptions = {}) {
       Object.assign(config, nextOptions);
       init();
+      if (REDUCED_MOTION) renderStatic();
     },
     /** Stop the animation loop, remove listeners, and remove the canvas. */
     destroy() {
       destroyed = true;
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      stop();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("visibilitychange", handleVisibility);
       canvas.remove();
     },
   };
 }
+
+// Declarative init: every [data-flow-field] element is wired up from its
+// own data-* attributes. Keeps the host pages free of inline <script>, so
+// they can defer every script and run under a CSP with no 'unsafe-inline'.
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("[data-flow-field]").forEach((el) => {
+    const d = el.dataset;
+    const num = (v) => (v === undefined ? undefined : parseFloat(v));
+    createFlowFieldBackground(el, {
+      color: d.color,
+      background: d.background,
+      trailOpacity: num(d.trailOpacity),
+      particleCount: num(d.particleCount),
+      speed: num(d.speed),
+      size: num(d.size),
+    });
+  });
+});

@@ -47,14 +47,21 @@
   white-space: nowrap;
 }
 
-.works-list-col li {
+.works-list-col button {
+  /* Form controls don't inherit typography from .works-list the way the
+     <li>s used to, so each inherited property has to be asked for by name. */
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: left;
+  padding: 0;
   color: var(--gray);
   cursor: pointer;
   transition: color 0.25s var(--ease);
 }
 
-.works-list-col li:hover,
-.works-list-col li.active {
+.works-list-col button:hover,
+.works-list-col button.active {
   color: var(--white);
 }
 

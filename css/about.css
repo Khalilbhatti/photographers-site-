@@ -1,5 +1,44 @@
+/* ---------- Split layout ----------
+   Content scrolls on the left; the sequence column sticks to the right for
+   the length of <main>. position:sticky does the holding rather than a
+   ScrollTrigger pin, so nothing is injected into the document flow and the
+   sequence only has to map its frame index onto progress through <main>
+   (see data-scrub-trigger in about.html). */
+.about-split {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.9vw;
+}
+
+.about-split__content {
+  flex: 1 1 0;
+  min-width: 0; /* let the flex item shrink instead of being floored by its text */
+  /* The copy is far shorter than 240 frames need. The floor buys the scroll,
+     and space-between then paces the blocks down it — otherwise everything
+     clumps at the top and the rest of the column is a void. */
+  min-height: 280vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 6vw;
+}
+
+.about-split__media {
+  flex: 0 0 46%;
+  position: sticky;
+  top: 0;
+  /* svh, not vh: vh tracks the mobile toolbar, and a column that resizes
+     mid-scroll makes the sequence jump. */
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.1vw;
+}
+
 .about-body {
-  padding: 9vw 1.9vw 0;
+  padding: 9vw 1.9vw 0; /* clears the fixed nav — this is the first block again */
   display: flex;
   gap: 1.5vw;
   align-items: flex-start;
@@ -39,6 +78,132 @@
 
 .bio-text .fade.revealed {
   color: var(--gray);
+}
+
+/* ---------- Scroll-linked camera sequence ----------
+   Full-viewport stage that js/camera-sequence.js pins while the frames
+   scrub. The canvas fills the stage and the frame is contain-fitted and
+   centred inside it by the draw code, so the backdrop colour below shows
+   as letterboxing and needs to match the page. */
+/* Matched to the frames' own 16:9 so a contain-fit lands exactly edge to
+   edge — no letterbox bands inside the column, and the caption below sits
+   flush under the image instead of floating in dead space. Narrow screens
+   override this back to a full-height stage, which is what pinning needs. */
+.camera-seq {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1280 / 720;
+  overflow: hidden;
+  background: var(--near-black);
+}
+
+.camera-seq__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Nav legibility scrim, scoped to this page (about.css only loads here).
+   The hero sequence is shot on a near-white backdrop and this page's nav
+   is white text, so without a backdrop the two cancel out.
+
+   Anchored to the nav rather than to the stage: the stage scrolls out from
+   under the nav when the pin releases, and a stage-anchored scrim goes
+   with it — stranding the nav over a still-light frame for the whole
+   unpin transition. On the nav it is correct at every scroll position, and
+   it is invisible over the dark sections further down the page.
+
+   Held near-flat for the first 80px (the band the nav occupies) before
+   fading out. A plain top-to-bottom fade lands ~0.48 alpha at the nav's
+   baseline, leaving the small grey .nav-meta text at 3.1:1 against a
+   near-white frame; holding it puts that back over 6:1. */
+.site-nav::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 22vh;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.78) 0,
+    rgba(0, 0, 0, 0.72) 80px,
+    rgba(0, 0, 0, 0.34) 150px,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* In flow under the stage, not overlaid on it. Revealed by the stage's
+   own is-ready class, so it's a sibling selector rather than a descendant. */
+.camera-seq__caption {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+
+.camera-seq.is-ready + .camera-seq__caption {
+  opacity: 1;
+}
+
+/* Shown until every frame has settled, then faded out. Sits above the
+   canvas so the stage is never a blank rectangle. */
+.camera-seq__fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 3; /* above the nav scrim, so loading state reads at full contrast */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1vw;
+  background: var(--near-black);
+  transition: opacity 0.6s var(--ease), visibility 0.6s var(--ease);
+}
+
+.camera-seq.is-ready .camera-seq__fallback {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.camera-seq__label,
+.camera-seq__pct {
+  font-size: 0.78vw;
+  letter-spacing: 0.08em;
+  color: var(--gray-dark);
+}
+
+.camera-seq__bar {
+  width: 14vw;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.camera-seq__bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--white);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s linear;
+}
+
+.camera-seq__poster {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+/* prefers-reduced-motion: no pin, no scrub — the stage becomes an
+   ordinary block showing one still frame, so it needs no viewport height. */
+.camera-seq.is-static {
+  height: 62vh;
 }
 
 .about-section {
@@ -91,9 +256,41 @@
 }
 
 @media (max-width: 768px) {
+  /* No room for two columns: stack them with the sequence on top. It stops
+     being sticky here and reverts to a normal pinned hero — the matching JS
+     branch is in js/camera-sequence.js, keyed to this same 768px edge. */
+  .about-split {
+    flex-direction: column;
+    gap: 0;
+  }
+  .about-split__media {
+    order: -1; /* visually first; content stays first in the DOM */
+    position: static;
+    flex: none;
+    display: block;
+    width: 100%;
+    height: auto; /* the stage sets its own height; the caption flows below */
+  }
+  /* Back to a full-height stage: pinning a 16:9 strip on a tall phone
+     screen reads as a stuck sliver rather than a hero. */
+  .camera-seq {
+    height: 100vh;
+    height: 100svh;
+    aspect-ratio: auto;
+  }
+  .camera-seq__caption {
+    padding: 4vw 4vw 0;
+  }
+  .about-split__content {
+    width: 100%;
+    display: block;
+    min-height: 0; /* the desktop scroll floor is meaningless once pinned */
+    padding-bottom: 0;
+  }
   .about-body {
     flex-direction: column;
     gap: 3vw;
+    padding-top: 6vw; /* the sequence clears the nav now, not this block */
   }
   .bio-text {
     font-size: 6.5vw;
@@ -105,5 +302,24 @@
   .section-columns,
   .credits-columns {
     font-size: 3.4vw;
+  }
+  /* The frame stays contain-fitted and centred by the draw code; only the
+     chrome around it needs rescaling out of vw units at this width. */
+  .camera-seq__caption {
+    left: 4vw;
+    bottom: 5vw;
+  }
+  .camera-seq__fallback {
+    gap: 4vw;
+  }
+  .camera-seq__label,
+  .camera-seq__pct {
+    font-size: 3vw;
+  }
+  .camera-seq__bar {
+    width: 46vw;
+  }
+  .camera-seq.is-static {
+    height: 46vh;
   }
 }

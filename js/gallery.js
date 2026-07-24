@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const rulerTrack = document.getElementById("rulerTrack");
   if (!canvas || typeof THREE === "undefined") return;
 
+  const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   // ---- Scene setup ----
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
@@ -72,7 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   for (let i = 1; i <= IMAGE_COUNT; i++) {
     const photo = GALLERY_PHOTOS[i - 1];
-    const tex = texLoader.load(photo.src);
+    // Each texture arrives after the first paint, so trigger a redraw in
+    // case the loop has already parked itself.
+    const tex = texLoader.load(photo.src, () => wake());
     tex.colorSpace = THREE.SRGBColorSpace;
     const h = 3.2;
     const w = h * photo.aspect;
@@ -123,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lastX = e.clientX;
     lastY = e.clientY;
     canvas.setPointerCapture(e.pointerId);
+    wake();
   });
 
   window.addEventListener("pointermove", (e) => {
@@ -136,6 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     velY = d.y;
     targetX = THREE.MathUtils.clamp(targetX + d.x, -RANGE_X * 0.5, RANGE_X * 0.5);
     targetY = THREE.MathUtils.clamp(targetY + d.y, -6, 6);
+    wake();
   });
 
   window.addEventListener("pointerup", () => {
@@ -232,10 +238,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   setupDrawGate(() => {
+    if (REDUCED_MOTION) {
+      items.forEach((m) => {
+        m.material.uniforms.uOpacity.value = 1;
+      });
+      camera.position.z = 9;
+      wake();
+      return;
+    }
     items.forEach((m) => {
-      gsap.to(m.material.uniforms.uOpacity, { value: 1, duration: 0.6 });
+      gsap.to(m.material.uniforms.uOpacity, { value: 1, duration: 0.6, onUpdate: wake });
     });
-    gsap.to(camera.position, { z: 9, duration: 0.9, ease: "power3.out" });
+    gsap.to(camera.position, { z: 9, duration: 0.9, ease: "power3.out", onUpdate: wake });
   });
 
   // ---- Resize ----
@@ -243,11 +257,45 @@ document.addEventListener("DOMContentLoaded", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    wake();
   });
 
   // ---- Animation loop ----
-  function animate() {
+  // The loop parks itself once the scene has come to rest rather than
+  // rendering at 60fps forever — WebGL is the most expensive thing on this
+  // page and a still gallery has nothing new to draw. Every input, every
+  // resize and every GSAP tween that touches the scene calls wake(), so
+  // anything that changes a pixel restarts it.
+  //
+  // The planes used to accumulate a per-frame rotation drift here, which
+  // was what made rest unreachable. It was well below the threshold of
+  // visibility, so it's been dropped in favour of being able to idle.
+  const REST_EPSILON = 0.0001;
+  const IDLE_FRAMES_BEFORE_PARK = 30; // ~0.5s of stillness
+  let idleFrames = 0;
+  let running = false;
+
+  function wake() {
+    idleFrames = 0;
+    if (running || document.hidden) return;
+    running = true;
     requestAnimationFrame(animate);
+  }
+
+  function isAtRest() {
+    return (
+      !isDragging &&
+      Math.abs(velX) < REST_EPSILON &&
+      Math.abs(velY) < REST_EPSILON &&
+      Math.abs(dragVelocity.x) < REST_EPSILON &&
+      Math.abs(dragVelocity.y) < REST_EPSILON &&
+      Math.abs(targetX - world.position.x) < REST_EPSILON &&
+      Math.abs(targetY - world.position.y) < REST_EPSILON
+    );
+  }
+
+  function animate() {
+    if (!running) return;
 
     if (!isDragging) {
       velX *= 0.94;
@@ -263,13 +311,26 @@ document.addEventListener("DOMContentLoaded", () => {
     dragVelocity.x += (velX - dragVelocity.x) * 0.15;
     dragVelocity.y += (velY - dragVelocity.y) * 0.15;
 
-    items.forEach((m, i) => {
-      m.rotation.z += Math.sin(Date.now() * 0.0002 + i) * 0.00015;
+    items.forEach((m) => {
       m.material.uniforms.uVelocity.value.set(dragVelocity.x, dragVelocity.y);
     });
 
     updateRulerCursor();
     renderer.render(scene, camera);
+
+    idleFrames = isAtRest() ? idleFrames + 1 : 0;
+    if (idleFrames >= IDLE_FRAMES_BEFORE_PARK) {
+      running = false;
+      return;
+    }
+    requestAnimationFrame(animate);
   }
-  animate();
+
+  // A backgrounded tab shouldn't hold a WebGL loop open.
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) running = false;
+    else wake();
+  });
+
+  wake();
 });

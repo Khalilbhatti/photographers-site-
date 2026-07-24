@@ -1,7 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const allCards = Array.from(document.querySelectorAll(".work-card"));
+
+  // Each card links to its own project detail page, driven by its data-id
+  // rather than 17 hardcoded hrefs in the markup. Assigned before any of
+  // the guards below, because navigation has to survive GSAP failing to
+  // load — otherwise every card silently stays href="#".
+  allCards.forEach((card) => {
+    card.href = `project.html?slug=${card.dataset.id}`;
+  });
+
   const track = document.getElementById("worksTrack");
   const wrap = document.querySelector(".works-scroll-wrap");
   if (!track || !wrap || typeof gsap === "undefined") return;
+
+  const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -10,28 +22,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const layout = document.querySelector(".works-layout");
-  const allCards = Array.from(document.querySelectorAll(".work-card"));
 
-  // Each card links to its own project detail page, driven by its data-id
-  // rather than 17 hardcoded hrefs in the markup.
-  allCards.forEach((card) => {
-    card.href = `project.html?slug=${card.dataset.id}`;
-  });
+  // Card geometry is measured once per layout (and again on every
+  // ScrollTrigger refresh) instead of per scroll tick. Reading each card's
+  // box while also writing transforms to it forced a synchronous reflow on
+  // every scrubbed frame of the pinned horizontal scroll — 17 cards, ~60
+  // times a second. offsetLeft/offsetWidth are relative to .works-layout
+  // and unaffected by the track's transform, so a single measurement stays
+  // valid for every value of trackX.
+  let cardMetrics = [];
+  function measureCards() {
+    cardMetrics = allCards.map((card) => ({
+      img: card.querySelector("img"),
+      cat: card.dataset.cat,
+      mid: card.offsetLeft + card.offsetWidth / 2,
+    }));
+  }
 
   // Each card's image drifts slightly slower/faster than its container as
   // the horizontal track moves, so the whole gallery reads as layered
   // rather than a single flat strip translating in lockstep.
-  const viewportCenter = () => window.innerWidth / 2;
-
-  function applyCardParallax() {
-    allCards.forEach((card) => {
-      const img = card.querySelector("img");
-      if (!img) return;
-      const rect = card.getBoundingClientRect();
-      const cardCenter = rect.left + rect.width / 2;
-      const distFromCenter = (viewportCenter() - cardCenter) / window.innerWidth;
-      gsap.set(img, { xPercent: distFromCenter * 14 });
-    });
+  function applyCardParallax(trackX) {
+    if (REDUCED_MOTION) return;
+    const viewportCenter = window.innerWidth / 2;
+    for (const m of cardMetrics) {
+      if (!m.img) continue;
+      const distFromCenter = (viewportCenter - (m.mid + trackX)) / window.innerWidth;
+      gsap.set(m.img, { xPercent: distFromCenter * 14 });
+    }
   }
 
   // Category tab state: highlights whichever category is currently centered
@@ -101,21 +119,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function updateActiveCategoryFromScroll() {
-    const trackX = -gsap.getProperty(track, "x");
-    const viewportMidInTrack = trackX + window.innerWidth / 2;
+  function updateActiveCategoryFromScroll(trackX) {
+    const viewportMidInTrack = -trackX + window.innerWidth / 2;
 
-    let closest = null;
+    let closestCat = null;
     let closestDist = Infinity;
-    allCards.forEach((card) => {
-      const cardMid = card.offsetLeft + card.offsetWidth / 2;
-      const dist = Math.abs(cardMid - viewportMidInTrack);
+    for (const m of cardMetrics) {
+      const dist = Math.abs(m.mid - viewportMidInTrack);
       if (dist < closestDist) {
         closestDist = dist;
-        closest = card;
+        closestCat = m.cat;
       }
-    });
-    if (closest) setActiveCategory(closest.dataset.cat);
+    }
+    if (closestCat) setActiveCategory(closestCat);
   }
 
   let st;
@@ -129,15 +145,21 @@ document.addEventListener("DOMContentLoaded", () => {
       pin: true,
       scrub: 0.6,
       onUpdate: (self) => {
-        gsap.set(track, { x: -self.progress * getScrollDistance() });
-        applyCardParallax();
-        updateActiveCategoryFromScroll();
+        const trackX = -self.progress * getScrollDistance();
+        gsap.set(track, { x: trackX });
+        applyCardParallax(trackX);
+        updateActiveCategoryFromScroll(trackX);
       },
     });
   }
 
+  measureCards();
   setActiveCategory("editorial");
   buildScrollTrigger();
+
+  // Re-measure whenever ScrollTrigger recalculates layout (resize, late
+  // image loads), so the cached card geometry can't drift out of date.
+  ScrollTrigger.addEventListener("refresh", measureCards);
 
   window.addEventListener("resize", () => {
     ScrollTrigger.refresh();
@@ -170,14 +192,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Sidebar list click -> scroll track to matching card
-  document.querySelectorAll(".works-list-col li").forEach((li) => {
-    li.addEventListener("click", () => {
-      document
-        .querySelectorAll(".works-list-col li")
-        .forEach((el) => el.classList.remove("active"));
-      li.classList.add("active");
-      const card = document.querySelector(`.work-card[data-id="${li.dataset.target}"]`);
+  // Index list activation -> scroll track to matching card. These are
+  // <button>s, so this fires for Enter/Space as well as clicks.
+  const indexButtons = document.querySelectorAll(".works-list-col button");
+  indexButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      indexButtons.forEach((el) => el.classList.remove("active"));
+      btn.classList.add("active");
+      const card = document.querySelector(`.work-card[data-id="${btn.dataset.target}"]`);
       if (card) scrollToCard(card);
     });
   });

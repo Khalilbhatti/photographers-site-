@@ -4,6 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About — M Khalil Ur Rehman</title>
+    <meta
+      name="description"
+      content="M Khalil Ur Rehman is a Paris-based portrait photographer known for striking, editorial-driven imagery. Clients include Adidas, Asics, Oppo and Visionnaire."
+    />
+    <link rel="canonical" href="https://mkhalilurrehman.com/about.html" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="M Khalil Ur Rehman" />
+    <meta property="og:title" content="About — M Khalil Ur Rehman" />
+    <meta
+      property="og:description"
+      content="M Khalil Ur Rehman is a Paris-based portrait photographer known for striking, editorial-driven imagery."
+    />
+    <meta property="og:url" content="https://mkhalilurrehman.com/about.html" />
+    <meta property="og:image" content="https://mkhalilurrehman.com/images/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Portrait photography by M Khalil Ur Rehman" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="About — M Khalil Ur Rehman" />
+    <meta
+      name="twitter:description"
+      content="M Khalil Ur Rehman is a Paris-based portrait photographer known for striking, editorial-driven imagery."
+    />
+    <meta name="twitter:image" content="https://mkhalilurrehman.com/images/og-cover.jpg" />
+
     <link
       rel="icon"
       type="image/svg+xml"
@@ -14,7 +40,21 @@
     <link rel="stylesheet" href="css/flow-field-background.css" />
   </head>
   <body class="theme-dark">
-    <div id="ambientBg" class="flow-field-bg--ambient"></div>
+    <!-- Dark-mode ambient particle texture behind the bio/clients/credits
+         sections. Config lives in data-* attributes rather than an inline
+         script tag so every script on the page can be deferred and the CSP
+         in vercel.json can forbid inline script outright. -->
+    <div
+      id="ambientBg"
+      class="flow-field-bg--ambient"
+      aria-hidden="true"
+      data-flow-field
+      data-color="#ffffff"
+      data-background="#0d0d0d"
+      data-trail-opacity="0.12"
+      data-particle-count="220"
+      data-speed="0.6"
+    ></div>
 
     <div id="loader">
       <h4>LOADING</h4>
@@ -42,69 +82,113 @@
       </div>
     </nav>
 
-    <main>
-      <section class="about-body">
-        <div class="info-pill">INFO</div>
-        <p class="bio-text">
-          <span class="lead">M Khalil Ur Rehman is a Paris-based portrait photographer</span>
-          <span class="fade" data-reveal
-            >known for striking, editorial-driven imagery. His work blends raw
-            emotion with a bold visual language, distilling each subject down
-            to something honest and unmistakably his own.</span
-          >
-        </p>
-      </section>
+    <!-- Two columns: the page's own content scrolls on the left while the
+         frame sequence holds the right-hand column for the length of <main>.
+         The holding is done by CSS position:sticky (see .about-split__media
+         in about.css), NOT by a ScrollTrigger pin — so nothing is injected
+         into the document flow, and the sequence only has to map its frame
+         index onto how far through <main> you've scrolled. That mapping is
+         what data-scrub-trigger declares.
 
-      <section class="about-section">
-        <div class="tag-pill">CLIENTS</div>
-        <div class="section-columns">
-          <ul>
-            <li>Adidas</li>
-            <li>Asics</li>
-            <li>Oppo</li>
-            <li>Visionnaire</li>
-            <li>Santacruz</li>
-            <li>Mobilize</li>
-            <li>Braave</li>
-          </ul>
-          <ul>
-            <li>Cloud</li>
-            <li>DJ Dre Tala</li>
-            <li>Hoshi</li>
-            <li>Le Motif</li>
-            <li>13 Block</li>
-            <li>Earvinho Kawazaki</li>
-            <li>Malo</li>
-          </ul>
-        </div>
-      </section>
+         Content comes first in the DOM so assistive tech and non-CSS
+         readers get the bio before the decorative column; the visual
+         left/right order falls out of the flex direction. Below 769px the
+         columns stack with the sequence on top and it reverts to a normal
+         pinned hero — see the matchMedia branches in js/camera-sequence.js. -->
+    <main class="about-split">
+      <div class="about-split__content">
+        <section class="about-body">
+          <div class="info-pill">INFO</div>
+          <p class="bio-text">
+            <span class="lead">M Khalil Ur Rehman is a Paris-based portrait photographer</span>
+            <span class="fade" data-reveal
+              >known for striking, editorial-driven imagery. His work blends raw
+              emotion with a bold visual language, distilling each subject down
+              to something honest and unmistakably his own.</span
+            >
+          </p>
+        </section>
 
-      <section class="about-section">
-        <div class="tag-pill">CREDITS</div>
-        <div class="credits-columns">
-          <div class="credit-block">
-            <h4>Development</h4>
-            <a href="#" class="link">@mkhalilurrehman ↗</a>
+        <section class="about-section">
+          <div class="tag-pill">CLIENTS</div>
+          <div class="section-columns">
+            <ul>
+              <li>Adidas</li>
+              <li>Asics</li>
+              <li>Oppo</li>
+              <li>Visionnaire</li>
+              <li>Santacruz</li>
+              <li>Mobilize</li>
+              <li>Braave</li>
+            </ul>
+            <ul>
+              <li>Cloud</li>
+              <li>DJ Dre Tala</li>
+              <li>Hoshi</li>
+              <li>Le Motif</li>
+              <li>13 Block</li>
+              <li>Earvinho Kawazaki</li>
+              <li>Malo</li>
+            </ul>
           </div>
-          <div class="credit-block">
-            <h4>Art Direction</h4>
-            <a href="#" class="link">@mkhalilurrehman ↗</a>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="about-links">
-        <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="pill-btn">
-          <span class="pill-fill"></span>
-          <span class="pill-label">Instagram</span>
-          <span class="pill-arrow">↗</span>
-        </a>
-        <a href="mailto:hello@mkhalilurrehman.com" class="pill-btn">
-          <span class="pill-fill"></span>
-          <span class="pill-label">Email</span>
-          <span class="pill-arrow">↗</span>
-        </a>
-      </section>
+        <section class="about-section">
+          <div class="tag-pill">CREDITS</div>
+          <div class="credits-columns">
+            <div class="credit-block">
+              <h4>Development</h4>
+              <a href="#" class="link">@mkhalilurrehman ↗</a>
+            </div>
+            <div class="credit-block">
+              <h4>Art Direction</h4>
+              <a href="#" class="link">@mkhalilurrehman ↗</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="about-links">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="pill-btn">
+            <span class="pill-fill"></span>
+            <span class="pill-label">Instagram</span>
+            <span class="pill-arrow">↗</span>
+          </a>
+          <a href="mailto:hello@mkhalilurrehman.com" class="pill-btn">
+            <span class="pill-fill"></span>
+            <span class="pill-label">Email</span>
+            <span class="pill-arrow">↗</span>
+          </a>
+        </section>
+      </div>
+
+      <div class="about-split__media">
+        <section class="camera-seq" data-camera-sequence data-scrub-trigger=".about-split">
+          <canvas class="camera-seq__canvas" aria-hidden="true"></canvas>
+
+          <div class="camera-seq__fallback">
+            <span class="camera-seq__label">LOADING SEQUENCE</span>
+            <div class="camera-seq__bar"><span></span></div>
+            <span class="camera-seq__pct">0%</span>
+          </div>
+
+          <noscript>
+            <img
+              class="camera-seq__poster"
+              src="camera/ezgif-frame-001.jpg"
+              alt="The camera M Khalil Ur Rehman shoots on"
+              width="1280"
+              height="720"
+            />
+          </noscript>
+        </section>
+
+        <!-- Below the stage rather than overlaid on it: the frames are shot
+             on near-white, and this pill draws itself in currentColor, which
+             is white on this page. -->
+        <div class="camera-seq__caption">
+          <span class="tag-pill">THE TOOL</span>
+        </div>
+      </div>
     </main>
 
     <footer class="site-footer">
@@ -113,24 +197,30 @@
       <span>LAST UPDATE : FEB 2026</span>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/about.js"></script>
-    <script src="js/flow-field-background.js"></script>
-    <script>
-      // Dark-mode ambient texture behind the bio/clients/credits sections.
-      // The hero already has its own depth-map canvas, so this only
-      // needs to cover the page — it'll simply sit unseen behind the hero.
-      createFlowFieldBackground(document.getElementById("ambientBg"), {
-        color: "#ffffff",
-        background: "#0d0d0d",
-        trailOpacity: 0.12,
-        particleCount: 220,
-        speed: 0.6,
-      });
-    </script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"
+      integrity="sha384-tKsJDT6PlUI0pSBt9/sBKJluKgA19/a6mBrDsZaXotLB4ZYfMGM6xt6/WgGpYhTm"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script defer src="js/main.js"></script>
+    <script defer src="js/about.js"></script>
+    <script defer src="js/camera-sequence.js"></script>
+    <script defer src="js/flow-field-background.js"></script>
   </body>
 </html>

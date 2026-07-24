@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll-linked camera sequence</title>
+    <!-- Stops the browser's automatic /favicon.ico probe when this file is
+         opened on its own. Drop it if your site already sets a favicon. -->
+    <link rel="icon" href="data:," />
+
+    <style>
+      /* ==========================================================
+         Scroll-linked image sequence — self-contained.
+         Everything the effect needs lives in this file. The only
+         external dependencies are GSAP + ScrollTrigger (loaded at
+         the bottom) and the frame images themselves.
+         ========================================================== */
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #0d0d0d;
+        color: #fff;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ---------- The stage ----------
+         Full-viewport box that gets pinned while the frames scrub.
+         The frame is drawn into the canvas and centred by the draw
+         code, so this background shows through as letterboxing and
+         needs to match whatever the frames' own background is. */
+      .seq {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        /* svh rather than vh: on mobile, vh tracks the browser's
+           expanding/collapsing toolbar. That resizes the pinned stage
+           mid-scroll and forces ScrollTrigger to re-measure, which
+           reads as a jolt exactly when the sequence starts. svh is
+           the stable small-viewport height. */
+        height: 100svh;
+        overflow: hidden;
+        background: #0d0d0d;
+      }
+
+      .seq__canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* ---------- Loading fallback ----------
+         Covers the stage until every frame has settled, so the
+         canvas is never a blank rectangle. Fades out on .is-ready. */
+      .seq__fallback {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        background: inherit;
+        transition: opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1),
+          visibility 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+
+      .seq.is-ready .seq__fallback {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .seq__label,
+      .seq__pct {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #6b6b6b;
+      }
+
+      .seq__bar {
+        width: 180px;
+        max-width: 46vw;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.18);
+        overflow: hidden;
+      }
+
+      .seq__bar span {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.25s linear;
+      }
+
+      /* Shown only when the sequence can't run at all (no JS). */
+      .seq__poster {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      /* prefers-reduced-motion: no pin, no scrub, one still frame —
+         so the stage doesn't need to hold a full viewport. */
+      .seq.is-static {
+        height: 62vh;
+      }
+
+      @media (max-width: 768px) {
+        .seq.is-static {
+          height: 46vh;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ---------- Demo-only scaffolding ----------
+         Content above and below the stage so the pin has something to
+         pin against. Delete this block when you drop the component in. */
+      .demo {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 8vw 6vw;
+        text-align: center;
+      }
+
+      .demo h1 {
+        margin: 0;
+        font-size: clamp(2rem, 7vw, 5rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+
+      .demo p {
+        margin: 0;
+        max-width: 46ch;
+        color: #afafaf;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Demo scaffolding — delete -->
+    <section class="demo">
+      <h1>Scroll down</h1>
+      <p>The stage below pins to the viewport and the frames scrub against your scroll position.</p>
+    </section>
+
+    <!-- ==========================================================
+         THE COMPONENT. Everything is configured from data-* here,
+         so the script below never needs editing.
+
+           data-frame-count   how many frames there are
+           data-frame-src     path template; {i} is the frame number
+           data-frame-pad     zero-pad width for {i} (3 -> 001)
+           data-frame-width   intrinsic frame width  (for fit maths)
+           data-frame-height  intrinsic frame height
+           data-fit           "contain" (never crops) or "cover"
+           data-pixel-perfect "true" (default) snaps enlargement to whole
+                              factors so nothing is resampled; "false"
+                              stretches to fill, which is softer
+           data-backdrop      letterbox colour behind a contain fit
+           data-scrub         ScrollTrigger scrub, in seconds
+           data-px-per-frame  scroll travel each frame gets
+           data-min-viewports floor on total travel, in viewports
+         ========================================================== -->
+    <section
+      class="seq"
+      data-seq
+      data-frame-count="240"
+      data-frame-src="camera/ezgif-frame-{i}.jpg"
+      data-frame-pad="3"
+      data-frame-width="1280"
+      data-frame-height="720"
+      data-fit="contain"
+      data-backdrop="#0d0d0d"
+      data-scrub="0.6"
+      data-px-per-frame="9"
+      data-min-viewports="2.2"
+    >
+      <canvas class="seq__canvas" aria-hidden="true"></canvas>
+
+      <div class="seq__fallback">
+        <span class="seq__label">Loading sequence</span>
+        <div class="seq__bar"><span></span></div>
+        <span class="seq__pct">0%</span>
+      </div>
+
+      <noscript>
+        <img
+          class="seq__poster"
+          src="camera/ezgif-frame-001.jpg"
+          alt="Camera"
+          width="1280"
+          height="720"
+        />
+      </noscript>
+    </section>
+
+    <!-- Demo scaffolding — delete -->
+    <section class="demo">
+      <h1>And out again</h1>
+      <p>The stage unpins here and the page carries on as normal.</p>
+    </section>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script>
+      /**
+       * Scroll-linked image sequence — the technique Apple uses on the
+       * AirPods page. Frames are preloaded, then scroll position is mapped
+       * straight onto the frame index while the canvas is pinned, so the
+       * clip scrubs under the user's thumb instead of playing on its own
+       * clock.
+       *
+       * Design decisions worth knowing before editing:
+       *
+       * - Frames are drawn into a <canvas>, not swapped through an <img
+       *   src>. Swapping src re-enters layout and image decode on every
+       *   frame, and that is precisely where this effect normally stutters.
+       * - The bulk preload waits for window `load`. Firing several MB of
+       *   frames during page startup starves the page's own critical
+       *   assets. Frame 1 alone is fetched immediately, as a poster.
+       * - The ScrollTrigger is built up front and never waits for the
+       *   preload. Building it later would add the pin's scroll distance
+       *   to the document after the fact and shove everything below it
+       *   down mid-scroll.
+       * - While frames are still arriving, render() falls back to the
+       *   nearest frame that has actually decoded, so scrubbing degrades
+       *   smoothly instead of showing gaps.
+       * - Only one draw happens per animation frame, and only when the
+       *   frame index actually changed.
+       * - prefers-reduced-motion fetches exactly one frame and shows it as
+       *   a still: no pin, no scrub, and no multi-MB download for motion
+       *   the user has asked not to see.
+       */
+      (function () {
+        "use strict";
+
+        function initSequence(section) {
+          var canvas = section.querySelector(".seq__canvas");
+          if (!canvas) return;
+          var ctx = canvas.getContext("2d", { alpha: false });
+          if (!ctx) return;
+
+          var fallback = section.querySelector(".seq__fallback");
+          var pctEl = section.querySelector(".seq__pct");
+          var barEl = section.querySelector(".seq__bar span");
+
+          var d = section.dataset;
+          var COUNT = parseInt(d.frameCount, 10) || 0;
+          var TEMPLATE = d.frameSrc || "";
+          var PAD = parseInt(d.framePad, 10) || 0;
+          var FRAME_W = parseFloat(d.frameWidth) || 1920;
+          var FRAME_H = parseFloat(d.frameHeight) || 1080;
+          var FIT = d.fit === "cover" ? "cover" : "contain";
+          var BACKDROP = d.backdrop || "#000000";
+          var PIXEL_PERFECT = d.pixelPerfect !== "false";
+          var SCRUB = d.scrub === undefined ? 0.6 : parseFloat(d.scrub);
+          var PX_PER_FRAME = parseFloat(d.pxPerFrame) || 9;
+          var MIN_VIEWPORTS = parseFloat(d.minViewports) || 2;
+
+          if (!COUNT || !TEMPLATE) return;
+
+          var REDUCED_MOTION = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches;
+
+          function framePath(i) {
+            var n = String(i + 1);
+            while (n.length < PAD) n = "0" + n;
+            return TEMPLATE.replace("{i}", n);
+          }
+
+          var frames = new Array(COUNT);
+          var settled = 0;
+          // Destination rect in device pixels, recomputed only on resize.
+          var bufW = 0, bufH = 0, dstX = 0, dstY = 0, dstW = 0, dstH = 0;
+          var drawnIndex = -1;
+          var targetIndex = 0;
+          var rafId = null;
+
+          function isReady(img) {
+            return !!img && img.complete && img.naturalWidth > 0;
+          }
+
+          /* ---- Sizing and pixel-perfect geometry ----
+           *
+           * All drawing happens in device pixels under an identity
+           * transform, not in CSS pixels under a dpr transform. That's what
+           * makes it possible to land the destination rect on exact pixel
+           * boundaries.
+           *
+           * A plain contain-fit usually ENLARGES the source — a 1280-wide
+           * frame becomes 1600 on a 1600px stage, 3024 on a retina laptop —
+           * and every one of those is a fractional resample, which is
+           * exactly where the softness comes from. So when the frame would
+           * be enlarged, the factor is snapped DOWN to a whole number: each
+           * source pixel then covers an exact NxN block of device pixels,
+           * with smoothing off, so nothing is interpolated at all.
+           *
+           * Reduction stays fractional and smoothed — downscaling through a
+           * good filter is already crisp, and snapping it would throw away
+           * most of the stage for no gain.
+           *
+           * Trade-off: the frame renders at its native size rather than
+           * stretched to fill. Sharper, and smaller. data-pixel-perfect="false"
+           * restores the old fill behaviour. Ignored for fit="cover", which
+           * has to enlarge past native by definition.
+           */
+          function resize() {
+            // 3, not 2: on a 3x phone the frame still lands under 1:1, so
+            // the extra density is real detail rather than wasted fill.
+            var dpr = Math.min(window.devicePixelRatio || 1, 3);
+            var rect = canvas.getBoundingClientRect();
+            bufW = Math.max(1, Math.round(rect.width * dpr));
+            bufH = Math.max(1, Math.round(rect.height * dpr));
+            canvas.width = bufW;
+            canvas.height = bufH;
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+            var raw =
+              FIT === "cover"
+                ? Math.max(bufW / FRAME_W, bufH / FRAME_H)
+                : Math.min(bufW / FRAME_W, bufH / FRAME_H);
+            var snap = PIXEL_PERFECT && FIT !== "cover" && raw >= 1;
+            var scale = snap ? Math.floor(raw) : raw;
+            var enlarging = scale > 1;
+
+            dstW = Math.round(FRAME_W * scale);
+            dstH = Math.round(FRAME_H * scale);
+            dstX = Math.round((bufW - dstW) / 2);
+            dstY = Math.round((bufH - dstH) / 2);
+
+            // Off only for whole-number enlargement (exact block
+            // replication); on otherwise, where filtering keeps it clean.
+            ctx.imageSmoothingEnabled = !(snap && enlarging);
+            ctx.imageSmoothingQuality = "high";
+
+            // The backdrop only needs painting when geometry changes: the
+            // destination rect is constant between resizes and the frames
+            // are opaque, so each redraw is a bare drawImage over the same
+            // rect rather than a full-canvas clear every scroll tick.
+            ctx.fillStyle = BACKDROP;
+            ctx.fillRect(0, 0, bufW, bufH);
+
+            drawnIndex = -1; // geometry changed, so force a redraw
+            render();
+          }
+
+          // Nearest frame that has actually decoded, searching outward.
+          // Only does real work while the preload is still in flight.
+          function nearestLoaded(i) {
+            if (isReady(frames[i])) return i;
+            for (var step = 1; step < COUNT; step++) {
+              if (isReady(frames[i - step])) return i - step;
+              if (isReady(frames[i + step])) return i + step;
+            }
+            return -1;
+          }
+
+          // contain: whole frame always visible, letterboxed — matters on
+          // portrait phones, where cover would crop the subject out of its
+          // own shot. cover: fills the stage, centre-cropped. Geometry comes
+          // from resize(); this is only the blit.
+          function render() {
+            var wanted = Math.min(COUNT - 1, Math.max(0, Math.round(targetIndex)));
+            var i = nearestLoaded(wanted);
+            if (i === -1 || i === drawnIndex) return;
+            drawnIndex = i;
+            ctx.drawImage(frames[i], dstX, dstY, dstW, dstH);
+          }
+
+          // Coalesce every request into at most one draw per frame.
+          function requestRender() {
+            if (rafId) return;
+            rafId = requestAnimationFrame(function () {
+              rafId = null;
+              render();
+            });
+          }
+
+          function setProgress(done, total) {
+            var pct = total ? Math.round((done / total) * 100) : 100;
+            if (pctEl) pctEl.textContent = pct + "%";
+            if (barEl) barEl.style.transform = "scaleX(" + pct / 100 + ")";
+          }
+
+          function markReady() {
+            section.classList.add("is-ready");
+            if (fallback) fallback.setAttribute("aria-hidden", "true");
+          }
+
+          function loadFrame(i, onSettled) {
+            var img = new Image();
+            img.decoding = "async";
+            function done() {
+              settled++;
+              if (onSettled) onSettled();
+            }
+            // A single missing frame must not stall the run; the sequence
+            // just holds the previous frame across the gap.
+            img.onload = done;
+            img.onerror = done;
+            img.src = framePath(i);
+            frames[i] = img;
+          }
+
+          /* ---- Preload with a fixed number of requests in flight. Firing
+             all of them at once buries the connection and makes the early
+             frames — the ones needed first — arrive last. ---- */
+          function preloadAll() {
+            var CONCURRENCY = 8;
+            var next = 0;
+
+            function pump() {
+              if (next >= COUNT) {
+                if (settled >= COUNT) markReady();
+                return;
+              }
+              var i = next++;
+              loadFrame(i, function () {
+                setProgress(settled, COUNT);
+                requestRender();
+                pump();
+              });
+            }
+
+            setProgress(0, COUNT);
+            for (var k = 0; k < Math.min(CONCURRENCY, COUNT); k++) pump();
+          }
+
+          // ---- Reduced motion: one still frame, no pin, no scrub. ----
+          if (REDUCED_MOTION) {
+            section.classList.add("is-static");
+            resize();
+            window.addEventListener("resize", resize);
+            loadFrame(0, function () {
+              setProgress(1, 1);
+              markReady();
+              requestRender();
+            });
+            return;
+          }
+
+          resize();
+          window.addEventListener("resize", resize);
+
+          // Poster frame right away; the rest wait for window `load`.
+          loadFrame(0, function () {
+            setProgress(settled, COUNT);
+            requestRender();
+          });
+
+          if (document.readyState === "complete") preloadAll();
+          else window.addEventListener("load", preloadAll, { once: true });
+
+          // Without GSAP the stage still shows the poster frame — it just
+          // doesn't scrub.
+          if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+          gsap.registerPlugin(ScrollTrigger);
+
+          // Travel is derived from the frame count so every frame gets
+          // roughly equal scroll, with a floor in viewports so the
+          // sequence never feels rushed on a short screen.
+          function scrollLength() {
+            return Math.round(
+              Math.max(window.innerHeight * MIN_VIEWPORTS, COUNT * PX_PER_FRAME)
+            );
+          }
+
+          var playhead = { frame: 0 };
+          gsap.to(playhead, {
+            frame: COUNT - 1,
+            ease: "none",
+            snap: "frame", // integral indices; no half-frames to round off
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: function () {
+                return "+=" + scrollLength();
+              },
+              pin: true,
+              pinSpacing: true,
+              anticipatePin: 1,
+              scrub: SCRUB, // smooths the mapping so fast flicks don't judder
+              invalidateOnRefresh: true,
+            },
+            onUpdate: function () {
+              targetIndex = playhead.frame;
+              requestRender();
+            },
+          });
+        }
+
+        function boot() {
+          var nodes = document.querySelectorAll("[data-seq]");
+          for (var i = 0; i < nodes.length; i++) initSequence(nodes[i]);
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", boot);
+        } else {
+          boot();
+        }
+      })();
+    </script>
+  </body>
+</html>

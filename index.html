@@ -6,8 +6,30 @@
     <title>M Khalil Ur Rehman — Portfolio</title>
     <meta
       name="description"
-      content="M Khalil Ur Rehman is a portrait photographer based in Paris."
+      content="M Khalil Ur Rehman is a portrait photographer based in Paris, working across editorial, portrait and commercial photography."
     />
+    <link rel="canonical" href="https://mkhalilurrehman.com/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="M Khalil Ur Rehman" />
+    <meta property="og:title" content="M Khalil Ur Rehman — Portfolio" />
+    <meta
+      property="og:description"
+      content="Paris-based portrait photographer working across editorial, portrait and commercial photography."
+    />
+    <meta property="og:url" content="https://mkhalilurrehman.com/" />
+    <meta property="og:image" content="https://mkhalilurrehman.com/images/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Portrait photography by M Khalil Ur Rehman" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="M Khalil Ur Rehman — Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Paris-based portrait photographer working across editorial, portrait and commercial photography."
+    />
+    <meta name="twitter:image" content="https://mkhalilurrehman.com/images/og-cover.jpg" />
+
     <link
       rel="icon"
       type="image/svg+xml"
@@ -18,7 +40,23 @@
     <link rel="stylesheet" href="css/flow-field-background.css" />
   </head>
   <body>
-    <div id="ambientBg" class="flow-field-bg--ambient"></div>
+    <!-- Light-mode ambient particle texture: white bg, near-black dust, very
+         understated so it never competes with the hero type or grid. Config
+         lives in data-* attributes rather than an inline script tag so every
+         script on the page can be deferred and the CSP in vercel.json can
+         forbid inline script outright. -->
+    <div
+      id="ambientBg"
+      class="flow-field-bg--ambient"
+      aria-hidden="true"
+      data-flow-field
+      data-color="#111111"
+      data-background="#ffffff"
+      data-trail-opacity="0.25"
+      data-particle-count="380"
+      data-speed="0.5"
+      data-size="2.6"
+    ></div>
 
     <div id="loader">
       <h4>LOADING</h4>
@@ -58,27 +96,106 @@
 
       <section class="home-grid">
         <div class="grid-row row-1">
-          <div class="g-img"><img src="images/3g0a9005.webp" alt="Editorial portrait" /></div>
+          <div class="g-img">
+            <img
+              src="images/3g0a9005.webp"
+              srcset="images/3g0a9005-640w.webp 640w, images/3g0a9005-960w.webp 960w, images/3g0a9005.webp 1280w"
+              sizes="(max-width: 768px) 80vw, 30vw"
+              alt="Editorial portrait"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
         </div>
         <div class="grid-row row-2">
-          <div class="g-img"><img src="images/AVE20231220_18444255_0090.webp" alt="Portrait" /></div>
+          <div class="g-img">
+            <img
+              src="images/AVE20231220_18444255_0090.webp"
+              srcset="images/AVE20231220_18444255_0090-640w.webp 640w, images/AVE20231220_18444255_0090-960w.webp 960w, images/AVE20231220_18444255_0090.webp 1142w"
+              sizes="(max-width: 768px) 80vw, 20vw"
+              alt="Portrait"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
         <div class="grid-row row-3">
-          <div class="g-img"><img src="images/ELECTRICK-1.webp" alt="Editorial" /></div>
+          <div class="g-img">
+            <img
+              src="images/ELECTRICK-1.webp"
+              srcset="images/ELECTRICK-1-640w.webp 640w, images/ELECTRICK-1-960w.webp 960w, images/ELECTRICK-1.webp 1280w"
+              sizes="(max-width: 768px) 80vw, 24vw"
+              alt="Editorial"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
         <div class="grid-row row-4">
-          <div class="g-img a"><img src="images/LARELEVE-1.webp" alt="Portrait" /></div>
-          <div class="g-img b"><img src="images/LARELEVE-5.webp" alt="Portrait" /></div>
+          <div class="g-img a">
+            <img
+              src="images/LARELEVE-1.webp"
+              srcset="images/LARELEVE-1-640w.webp 640w, images/LARELEVE-1-960w.webp 960w, images/LARELEVE-1.webp 1280w"
+              sizes="(max-width: 768px) 80vw, 30vw"
+              alt="Portrait"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="g-img b">
+            <img
+              src="images/LARELEVE-5.webp"
+              srcset="images/LARELEVE-5-640w.webp 640w, images/LARELEVE-5-960w.webp 960w, images/LARELEVE-5.webp 1280w"
+              sizes="(max-width: 768px) 80vw, 16vw"
+              alt="Portrait"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
         <div class="grid-row row-5">
-          <div class="g-img"><img src="images/come-up-img1.webp" alt="Editorial" /></div>
+          <div class="g-img">
+            <img
+              src="images/come-up-img1.webp"
+              srcset="images/come-up-img1-640w.webp 640w, images/come-up-img1-960w.webp 960w, images/come-up-img1.webp 2000w"
+              sizes="(max-width: 768px) 80vw, 22vw"
+              alt="Editorial"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
         <div class="grid-row row-6">
-          <div class="g-img"><img src="images/come-up-img2.webp" alt="Portrait" /></div>
+          <div class="g-img">
+            <img
+              src="images/come-up-img2.webp"
+              srcset="images/come-up-img2-640w.webp 640w, images/come-up-img2-960w.webp 960w, images/come-up-img2.webp 1600w"
+              sizes="(max-width: 768px) 80vw, 16vw"
+              alt="Portrait"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
         <div class="grid-row row-7">
-          <div class="g-img a"><img src="images/denzelcurry14822.webp" alt="Portrait" /></div>
-          <div class="g-img b"><img src="images/peugeot_153.webp" alt="Editorial" /></div>
+          <div class="g-img a">
+            <img
+              src="images/denzelcurry14822.webp"
+              alt="Portrait"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="g-img b">
+            <img
+              src="images/peugeot_153.webp"
+              srcset="images/peugeot_153-640w.webp 640w, images/peugeot_153-960w.webp 960w, images/peugeot_153.webp 1333w"
+              sizes="(max-width: 768px) 80vw, 22vw"
+              alt="Editorial"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </div>
       </section>
 
@@ -104,24 +221,30 @@
       </footer>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-    <script src="js/project-data.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/home.js"></script>
-    <script src="js/flow-field-background.js"></script>
-    <script>
-      // Light-mode ambient texture: white bg, near-black dust, very
-      // understated so it never competes with the hero type or grid.
-      createFlowFieldBackground(document.getElementById("ambientBg"), {
-        color: "#111111",
-        background: "#ffffff",
-        trailOpacity: 0.25,
-        particleCount: 380,
-        speed: 0.5,
-        size: 2.6,
-      });
-    </script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"
+      integrity="sha384-tKsJDT6PlUI0pSBt9/sBKJluKgA19/a6mBrDsZaXotLB4ZYfMGM6xt6/WgGpYhTm"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script defer src="js/project-data.js"></script>
+    <script defer src="js/main.js"></script>
+    <script defer src="js/home.js"></script>
+    <script defer src="js/flow-field-background.js"></script>
   </body>
 </html>

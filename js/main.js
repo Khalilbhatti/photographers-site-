@@ -1,5 +1,11 @@
 // Shared across all pages: intro loader, page-transition reveal/cover, active nav state
 
+// Skips the loader fade and Lenis' inertial scrolling. Each of the other
+// page scripts re-reads this query in its own function scope rather than
+// sharing this binding, so no file depends on another having loaded. The
+// matching CSS half lives in css/base.css.
+const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 function createTransitionOverlay() {
   let overlay = document.getElementById("page-transition");
   if (!overlay) {
@@ -57,32 +63,62 @@ function wireNavTransitions(overlay) {
     });
 }
 
+// The counter tracks real asset readiness (how many of the page's images
+// have settled) and dismisses on the window `load` event, so the loader
+// costs only as long as the page actually needs. It used to tick on a
+// random timer, which added a fixed 1-3.5s to time-to-content no matter
+// how fast everything had really loaded.
 function runLoader(onDone) {
   const loader = document.querySelector("#loader");
   const numberEl = document.querySelector("#loader-number");
+  const done = () => onDone && onDone();
   if (!loader || !numberEl) {
-    onDone && onDone();
+    done();
     return;
   }
 
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += Math.floor(Math.random() * 9) + 2;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(interval);
-      gsap.to(loader, {
-        opacity: 0,
-        duration: 0.5,
-        delay: 0.1,
-        onComplete: () => {
-          loader.style.display = "none";
-          onDone && onDone();
-        },
-      });
+  const imgs = Array.from(document.images);
+  let settled = imgs.filter((img) => img.complete).length;
+
+  function render() {
+    const pct = imgs.length ? Math.round((settled / imgs.length) * 100) : 100;
+    numberEl.textContent = pct + "%";
+  }
+  render();
+
+  imgs.forEach((img) => {
+    if (img.complete) return;
+    const bump = () => {
+      settled++;
+      render();
+    };
+    img.addEventListener("load", bump, { once: true });
+    img.addEventListener("error", bump, { once: true });
+  });
+
+  let finished = false;
+  function finish() {
+    if (finished) return;
+    finished = true;
+    numberEl.textContent = "100%";
+
+    const hide = () => {
+      loader.style.display = "none";
+      done();
+    };
+    if (typeof gsap === "undefined" || REDUCED_MOTION) {
+      hide();
+      return;
     }
-    numberEl.textContent = progress + "%";
-  }, 70);
+    gsap.to(loader, { opacity: 0, duration: 0.5, delay: 0.1, onComplete: hide });
+  }
+
+  if (document.readyState === "complete") finish();
+  else window.addEventListener("load", finish, { once: true });
+
+  // Safety net: a single stalled image (or a dead CDN) must never strand a
+  // visitor behind the loader.
+  setTimeout(finish, 6000);
 }
 
 function setActiveNav() {
@@ -98,6 +134,9 @@ function setActiveNav() {
 // the individual animations themselves are tuned.
 function initSmoothScroll() {
   if (typeof Lenis === "undefined" || typeof gsap === "undefined") return;
+  // Inertial scrolling is exactly the kind of motion reduced-motion users
+  // ask to avoid; fall back to the browser's native scrolling.
+  if (REDUCED_MOTION) return;
 
   const lenis = new Lenis({
     duration: 1.15,

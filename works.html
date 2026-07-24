@@ -4,6 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Work — M Khalil Ur Rehman</title>
+    <meta
+      name="description"
+      content="Selected editorial, portrait and commercial photography by M Khalil Ur Rehman — 17 projects for clients including Adidas, Asics, Oppo, Santacruz and Mobilize."
+    />
+    <link rel="canonical" href="https://mkhalilurrehman.com/works.html" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="M Khalil Ur Rehman" />
+    <meta property="og:title" content="Work — M Khalil Ur Rehman" />
+    <meta
+      property="og:description"
+      content="Selected editorial, portrait and commercial photography by M Khalil Ur Rehman."
+    />
+    <meta property="og:url" content="https://mkhalilurrehman.com/works.html" />
+    <meta property="og:image" content="https://mkhalilurrehman.com/images/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Portrait photography by M Khalil Ur Rehman" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Work — M Khalil Ur Rehman" />
+    <meta
+      name="twitter:description"
+      content="Selected editorial, portrait and commercial photography by M Khalil Ur Rehman."
+    />
+    <meta name="twitter:image" content="https://mkhalilurrehman.com/images/og-cover.jpg" />
+
     <link
       rel="icon"
       type="image/svg+xml"
@@ -14,7 +40,21 @@
     <link rel="stylesheet" href="css/flow-field-background.css" />
   </head>
   <body class="theme-dark">
-    <div id="ambientBg" class="flow-field-bg--ambient"></div>
+    <!-- Dark-mode ambient particle texture drifting behind the horizontal
+         card track. Config lives in data-* attributes rather than an inline
+         script tag so every script on the page can be deferred and the CSP in
+         vercel.json can forbid inline script outright. -->
+    <div
+      id="ambientBg"
+      class="flow-field-bg--ambient"
+      aria-hidden="true"
+      data-flow-field
+      data-color="#ffffff"
+      data-background="#0d0d0d"
+      data-trail-opacity="0.12"
+      data-particle-count="220"
+      data-speed="0.6"
+    ></div>
 
     <div id="loader">
       <h4>LOADING</h4>
@@ -65,101 +105,219 @@
           <div class="works-intro-slide">
             <h1 class="works-title">All<br />Works</h1>
 
-            <div class="works-list">
+            <!-- Index entries are <button>s, not bare <li>s: they scroll the
+                 track to a card on activation, so they need to be focusable
+                 and Enter/Space-operable rather than mouse-only. -->
+            <nav class="works-list" aria-label="Project index">
               <ul class="works-list-col">
-                <li data-target="road-trip">Road Trip</li>
-                <li data-target="visionnaire">Visionnaire</li>
-                <li data-target="santacruz">Santacruz</li>
-                <li data-target="summer-market">Summer Market</li>
-                <li data-target="color-mvdior">Color Mvdior</li>
+                <li><button type="button" data-target="road-trip">Road Trip</button></li>
+                <li><button type="button" data-target="visionnaire">Visionnaire</button></li>
+                <li><button type="button" data-target="santacruz">Santacruz</button></li>
+                <li><button type="button" data-target="summer-market">Summer Market</button></li>
+                <li><button type="button" data-target="color-mvdior">Color Mvdior</button></li>
               </ul>
               <ul class="works-list-col">
-                <li data-target="cloud">Cloud</li>
-                <li data-target="dj-dre-tala">DJ Dre Tala</li>
-                <li data-target="hoshi">Hoshi</li>
-                <li data-target="le-motif">Le Motif</li>
-                <li data-target="13block">13 Block</li>
-                <li data-target="earvinho-kawazaki">Earvinho Kawazaki</li>
-                <li data-target="malo">Malo</li>
+                <li><button type="button" data-target="cloud">Cloud</button></li>
+                <li><button type="button" data-target="dj-dre-tala">DJ Dre Tala</button></li>
+                <li><button type="button" data-target="hoshi">Hoshi</button></li>
+                <li><button type="button" data-target="le-motif">Le Motif</button></li>
+                <li><button type="button" data-target="13block">13 Block</button></li>
+                <li><button type="button" data-target="earvinho-kawazaki">Earvinho Kawazaki</button></li>
+                <li><button type="button" data-target="malo">Malo</button></li>
               </ul>
               <ul class="works-list-col">
-                <li data-target="oppo">Oppo</li>
-                <li data-target="adidas">Adidas</li>
-                <li data-target="asics">Asics</li>
-                <li data-target="braave">Braave</li>
-                <li data-target="mobilize">Mobilize</li>
+                <li><button type="button" data-target="oppo">Oppo</button></li>
+                <li><button type="button" data-target="adidas">Adidas</button></li>
+                <li><button type="button" data-target="asics">Asics</button></li>
+                <li><button type="button" data-target="braave">Braave</button></li>
+                <li><button type="button" data-target="mobilize">Mobilize</button></li>
               </ul>
-            </div>
+            </nav>
 
             <p class="works-hint">SCROLL TO EXPLORE →</p>
           </div>
 
           <a href="#" class="work-card" data-cat="editorial" data-id="road-trip">
-            <img src="images/LARELEVE-5.webp" alt="Road Trip project" />
+            <img
+              src="images/LARELEVE-5.webp"
+              srcset="images/LARELEVE-5-640w.webp 640w, images/LARELEVE-5-960w.webp 960w, images/LARELEVE-5.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Road Trip project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Road Trip</h2><span class="year-badge">2023</span></div>
           </a>
           <a href="#" class="work-card" data-cat="editorial" data-id="visionnaire">
-            <img src="images/portraits-11_benoitmagimel.webp" alt="Visionnaire project" />
+            <img
+              src="images/portraits-11_benoitmagimel.webp"
+              srcset="images/portraits-11_benoitmagimel-640w.webp 640w, images/portraits-11_benoitmagimel-960w.webp 960w, images/portraits-11_benoitmagimel.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Visionnaire project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Visionnaire</h2><span class="year-badge">2024</span></div>
           </a>
           <a href="#" class="work-card" data-cat="editorial" data-id="santacruz">
-            <img src="images/ELECTRICK-1.webp" alt="Santacruz project" />
+            <img
+              src="images/ELECTRICK-1.webp"
+              srcset="images/ELECTRICK-1-640w.webp 640w, images/ELECTRICK-1-960w.webp 960w, images/ELECTRICK-1.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Santacruz project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Santacruz</h2><span class="year-badge">2023</span></div>
           </a>
           <a href="#" class="work-card" data-cat="editorial" data-id="summer-market">
-            <img src="images/denzelcurry14822.webp" alt="Summer Market project" />
+            <img
+              src="images/denzelcurry14822.webp"
+              alt="Summer Market project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Summer Market</h2><span class="year-badge">2023</span></div>
           </a>
           <a href="#" class="work-card" data-cat="editorial" data-id="color-mvdior">
-            <img src="images/3g0a9005.webp" alt="Color Mvdior project" />
+            <img
+              src="images/3g0a9005.webp"
+              srcset="images/3g0a9005-640w.webp 640w, images/3g0a9005-960w.webp 960w, images/3g0a9005.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Color Mvdior project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Color Mvdior</h2><span class="year-badge">2024</span></div>
           </a>
           <a href="#" class="work-card" data-cat="portrait" data-id="cloud">
-            <img src="images/come-up-img1.webp" alt="Cloud project" />
+            <img
+              src="images/come-up-img1.webp"
+              srcset="images/come-up-img1-640w.webp 640w, images/come-up-img1-960w.webp 960w, images/come-up-img1.webp 2000w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Cloud project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Cloud</h2><span class="year-badge">2024</span></div>
           </a>
           <a href="#" class="work-card" data-cat="portrait" data-id="dj-dre-tala">
-            <img src="images/portraits-5_danibumba.webp" alt="DJ Dre Tala project" />
+            <img
+              src="images/portraits-5_danibumba.webp"
+              srcset="images/portraits-5_danibumba-640w.webp 640w, images/portraits-5_danibumba-960w.webp 960w, images/portraits-5_danibumba.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="DJ Dre Tala project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>DJ Dre Tala</h2><span class="year-badge">2023</span></div>
           </a>
           <a href="#" class="work-card" data-cat="portrait" data-id="hoshi">
-            <img src="images/LARELEVE-1.webp" alt="Hoshi project" />
+            <img
+              src="images/LARELEVE-1.webp"
+              srcset="images/LARELEVE-1-640w.webp 640w, images/LARELEVE-1-960w.webp 960w, images/LARELEVE-1.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Hoshi project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Hoshi</h2><span class="year-badge">2024</span></div>
           </a>
           <a href="#" class="work-card" data-cat="portrait" data-id="le-motif">
-            <img src="images/peugeot_153.webp" alt="Le Motif project" />
+            <img
+              src="images/peugeot_153.webp"
+              srcset="images/peugeot_153-640w.webp 640w, images/peugeot_153-960w.webp 960w, images/peugeot_153.webp 1333w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Le Motif project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Le Motif</h2><span class="year-badge">2023</span></div>
           </a>
           <a href="#" class="work-card" data-cat="portrait" data-id="13block">
-            <img src="images/AVE20231220_18444255_0090.webp" alt="13 Block project" />
+            <img
+              src="images/AVE20231220_18444255_0090.webp"
+              srcset="images/AVE20231220_18444255_0090-640w.webp 640w, images/AVE20231220_18444255_0090-960w.webp 960w, images/AVE20231220_18444255_0090.webp 1142w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="13 Block project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>13 Block</h2><span class="year-badge">2024</span></div>
           </a>
           <a href="#" class="work-card" data-cat="portrait" data-id="earvinho-kawazaki">
-            <img src="images/come-up-img2.webp" alt="Earvinho Kawazaki project" />
+            <img
+              src="images/come-up-img2.webp"
+              srcset="images/come-up-img2-640w.webp 640w, images/come-up-img2-960w.webp 960w, images/come-up-img2.webp 1600w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Earvinho Kawazaki project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Earvinho Kawazaki</h2><span class="year-badge">2023</span></div>
           </a>
           <a href="#" class="work-card" data-cat="portrait" data-id="malo">
-            <img src="images/summer-cover-selected.webp" alt="Malo project" />
+            <img
+              src="images/summer-cover-selected.webp"
+              srcset="images/summer-cover-selected-640w.webp 640w, images/summer-cover-selected-960w.webp 960w, images/summer-cover-selected.webp 1600w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Malo project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Malo</h2><span class="year-badge">2024</span></div>
           </a>
           <a href="#" class="work-card" data-cat="commercial" data-id="oppo">
-            <img src="images/LARELEVE-5.webp" alt="Oppo project" />
+            <img
+              src="images/LARELEVE-5.webp"
+              srcset="images/LARELEVE-5-640w.webp 640w, images/LARELEVE-5-960w.webp 960w, images/LARELEVE-5.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Oppo project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Oppo</h2><span class="year-badge">2024</span></div>
           </a>
           <a href="#" class="work-card" data-cat="commercial" data-id="adidas">
-            <img src="images/portraits-11_benoitmagimel.webp" alt="Adidas project" />
+            <img
+              src="images/portraits-11_benoitmagimel.webp"
+              srcset="images/portraits-11_benoitmagimel-640w.webp 640w, images/portraits-11_benoitmagimel-960w.webp 960w, images/portraits-11_benoitmagimel.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Adidas project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Adidas</h2><span class="year-badge">2023</span></div>
           </a>
           <a href="#" class="work-card" data-cat="commercial" data-id="asics">
-            <img src="images/ELECTRICK-1.webp" alt="Asics project" />
+            <img
+              src="images/ELECTRICK-1.webp"
+              srcset="images/ELECTRICK-1-640w.webp 640w, images/ELECTRICK-1-960w.webp 960w, images/ELECTRICK-1.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Asics project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Asics</h2><span class="year-badge">2023</span></div>
           </a>
           <a href="#" class="work-card" data-cat="commercial" data-id="braave">
-            <img src="images/denzelcurry14822.webp" alt="Braave project" />
+            <img
+              src="images/denzelcurry14822.webp"
+              alt="Braave project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Braave</h2><span class="year-badge">2024</span></div>
           </a>
           <a href="#" class="work-card" data-cat="commercial" data-id="mobilize">
-            <img src="images/3g0a9005.webp" alt="Mobilize project" />
+            <img
+              src="images/3g0a9005.webp"
+              srcset="images/3g0a9005-640w.webp 640w, images/3g0a9005-960w.webp 960w, images/3g0a9005.webp 1280w"
+              sizes="(max-width: 768px) 92vw, 50vw"
+              alt="Mobilize project"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="work-card-meta"><h2>Mobilize</h2><span class="year-badge">2024</span></div>
           </a>
         </div>
@@ -172,22 +330,29 @@
       <span>LAST UPDATE : FEB 2026</span>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/works.js"></script>
-    <script src="js/flow-field-background.js"></script>
-    <script>
-      // Dark-mode ambient texture: near-black bg, faint white/gray dust
-      // drifting behind the horizontal card track.
-      createFlowFieldBackground(document.getElementById("ambientBg"), {
-        color: "#ffffff",
-        background: "#0d0d0d",
-        trailOpacity: 0.12,
-        particleCount: 220,
-        speed: 0.6,
-      });
-    </script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"
+      integrity="sha384-tKsJDT6PlUI0pSBt9/sBKJluKgA19/a6mBrDsZaXotLB4ZYfMGM6xt6/WgGpYhTm"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script defer src="js/main.js"></script>
+    <script defer src="js/works.js"></script>
+    <script defer src="js/flow-field-background.js"></script>
   </body>
 </html>

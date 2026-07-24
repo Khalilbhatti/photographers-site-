@@ -358,6 +358,25 @@ button {
   }
 }
 
+/* ---------- Reduced motion ----------
+   Collapses every CSS transition and animation on the site — the loader's
+   spinning mark, the circular page-transition wipe, the link underlines,
+   the pill fills, the card zooms. The JS half of this lives in main.js
+   (Lenis inertia + loader fade) and in each page script, which read the
+   same media query and drop their decorative GSAP motion. Kept as a
+   near-zero duration rather than `none` so transitionend still fires and
+   navigateWithCover() in main.js can't stall waiting for it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ---------- Utility ---------- */
 .o-hidden {
   overflow: hidden;
