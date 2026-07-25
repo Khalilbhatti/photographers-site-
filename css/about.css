@@ -291,10 +291,15 @@
      instead of behind it. It stops being sticky here and reverts to a
      normal pinned hero — the matching JS branch is in
      js/camera-sequence.js, keyed to this same 768px edge. Switching
-     .about-split off grid also cancels the desktop grid-area:1/1 overlap
-     on its children, so they fall back into normal block flow. */
+     .about-split off grid cancels the desktop grid-area:1/1 overlap on its
+     children (grid-area only applies under a grid parent), falling back to
+     normal flow — flex rather than block specifically, because
+     .about-split__media's order:-1 below only works in a flex/grid
+     context. Content still comes first in the DOM for assistive tech;
+     order is what visually promotes the stage above it here. */
   .about-split {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
   .about-split__media {
     order: -1; /* visually first; content stays first in the DOM */
