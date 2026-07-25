@@ -67,7 +67,9 @@
 
 .works-hint {
   font-size: 0.75vw;
-  color: var(--gray-dark);
+  /* --gray-dark on this page's --near-black is ~3.4:1, under WCAG AA's
+     4.5:1 floor for this size; --gray clears ~9:1. */
+  color: var(--gray);
   letter-spacing: 0.05em;
 }
 
@@ -171,7 +173,9 @@
 }
 
 .cat-tab .cat-num {
-  color: var(--gray-dark);
+  /* Sits on a semi-transparent backdrop over varying imagery; --gray-dark
+     measured too low against the worst case, --gray is the safer floor. */
+  color: var(--gray);
   transition: color 0.3s var(--ease);
 }
 

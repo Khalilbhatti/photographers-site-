@@ -64,6 +64,54 @@ button {
   display: none;
 }
 
+/* ---------- Focus visibility ----------
+   No rule anywhere in this codebase sets outline:none, so keyboard focus
+   was never actually broken — but the browser default blue ring clashes
+   with this site's own black/white palette. :focus-visible (not :focus)
+   so mouse/touch clicks still don't show a ring, only keyboard/AT use. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+body:not(.theme-dark) a:focus-visible,
+body:not(.theme-dark) button:focus-visible {
+  outline-color: var(--black);
+}
+
+/* ---------- Skip link ----------
+   First focusable element on every real page (see html files); jumps
+   straight to <main id="main">, letting keyboard/screen-reader users
+   bypass the fixed nav instead of tabbing through it every page load. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 1.9vw;
+  z-index: 10000;
+  transform: translateY(-120%);
+  padding: 0.8vw 1.6vw;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--display-font);
+  font-weight: 700;
+  font-size: 0.9vw;
+  border-radius: 0 0 6px 6px;
+  transition: transform 0.2s var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0%);
+  outline: none; /* the link's own visibility on focus is the indicator */
+}
+
+@media (max-width: 768px) {
+  .skip-link {
+    font-size: 3.2vw;
+    padding: 2.5vw 4vw;
+  }
+}
+
 /* ---------- Page transition (circular reveal/cover) ---------- */
 #page-transition {
   position: fixed;
@@ -380,6 +428,23 @@ button {
 /* ---------- Utility ---------- */
 .o-hidden {
   overflow: hidden;
+}
+
+/* Standard visually-hidden pattern: present for screen readers/SEO crawlers,
+   removed from visual and layout flow. Used for headings the visual design
+   doesn't have room for as on-page text (e.g. index.html's image-grid home
+   page has no visible headline). Not display:none — that would also hide
+   it from assistive tech, defeating the point. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (max-width: 768px) {

@@ -1,36 +1,56 @@
-/* ---------- Split layout ----------
-   Content scrolls on the left; the sequence column sticks to the right for
-   the length of <main>. position:sticky does the holding rather than a
+/* ---------- Full-bleed layout ----------
+   The sequence is now a full-viewport background that sticks behind the
+   copy for the length of <main>, instead of owning its own 46% column.
+   Content and media share one grid cell (a CSS Grid overlap, not two
+   flex columns) so they stack rather than sit side by side; z-index puts
+   the copy on top. position:sticky still does the holding rather than a
    ScrollTrigger pin, so nothing is injected into the document flow and the
    sequence only has to map its frame index onto progress through <main>
    (see data-scrub-trigger in about.html). */
 .about-split {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.9vw;
+  display: grid;
+}
+
+.about-split__content,
+.about-split__media {
+  grid-area: 1 / 1;
 }
 
 .about-split__content {
-  flex: 1 1 0;
-  min-width: 0; /* let the flex item shrink instead of being floored by its text */
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  max-width: 46vw; /* keep the copy column readable instead of stretching edge to edge over the new full-bleed background */
   /* The copy is far shorter than 240 frames need. The floor buys the scroll,
      and space-between then paces the blocks down it — otherwise everything
-     clumps at the top and the rest of the column is a void. */
-  min-height: 280vh;
+     clumps at the top and the rest of the column is a void. Raised from
+     280vh so the sequence scrubs more slowly per pixel of scroll. */
+  min-height: 440vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding-bottom: 6vw;
+  /* Legibility scrim: the frames are shot on near-white, so the copy needs
+     a dark backing. Fades out toward the untouched right side of the frame
+     rather than darkening the whole viewport. */
+  background: linear-gradient(
+    to right,
+    rgba(13, 13, 13, 0.82) 0%,
+    rgba(13, 13, 13, 0.68) 60%,
+    rgba(13, 13, 13, 0) 100%
+  );
+  padding-right: 4vw;
 }
 
 .about-split__media {
-  flex: 0 0 46%;
+  z-index: 1;
   position: sticky;
   top: 0;
   /* svh, not vh: vh tracks the mobile toolbar, and a column that resizes
      mid-scroll makes the sequence jump. */
   height: 100vh;
   height: 100svh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -83,24 +103,27 @@
 /* ---------- Scroll-linked camera sequence ----------
    Full-viewport stage that js/camera-sequence.js pins while the frames
    scrub. The canvas fills the stage and the frame is contain-fitted and
-   centred inside it by the draw code, so the backdrop colour below shows
-   as letterboxing and needs to match the page. */
-/* Matched to the frames' own 16:9 so a contain-fit lands exactly edge to
-   edge — no letterbox bands inside the column, and the caption below sits
-   flush under the image instead of floating in dead space. Narrow screens
-   override this back to a full-height stage, which is what pinning needs. */
+   centred inside it by the draw code. */
+/* Fills the sticky column's full height rather than a fixed 16:9 box, now
+   that the column is the whole viewport instead of a 46% strip. No
+   background here (and none painted into the canvas either — see
+   camera-sequence.js) so the page's own ambient particle layer shows
+   through the stage's letterbox area instead of a flat black rect. */
 .camera-seq {
   position: relative;
   width: 100%;
-  aspect-ratio: 1280 / 720;
+  flex: 1 1 auto;
   overflow: hidden;
-  background: var(--near-black);
 }
 
 .camera-seq__canvas {
   display: block;
   width: 100%;
   height: 100%;
+  /* Background removal happens per-pixel in the draw code (see
+     js/camera-sequence.js), not here — mix-blend-mode: multiply was tried
+     first and rejected: against this near-black page it crushes the whole
+     frame toward black, not just the white studio backdrop. */
 }
 
 /* Nav legibility scrim, scoped to this page (about.css only loads here).
@@ -136,8 +159,12 @@
 }
 
 /* In flow under the stage, not overlaid on it. Revealed by the stage's
-   own is-ready class, so it's a sibling selector rather than a descendant. */
+   own is-ready class, so it's a sibling selector rather than a descendant.
+   Pinned to the right edge now that the column is full width, so it never
+   sits under the copy's legibility scrim on the left. */
 .camera-seq__caption {
+  align-self: flex-end;
+  margin-right: 1.9vw;
   opacity: 0;
   transition: opacity 0.6s var(--ease);
 }
@@ -170,7 +197,7 @@
 .camera-seq__pct {
   font-size: 0.78vw;
   letter-spacing: 0.08em;
-  color: var(--gray-dark);
+  color: var(--gray); /* --gray-dark on --near-black fails WCAG AA (~3.4:1) */
 }
 
 .camera-seq__bar {
@@ -233,7 +260,11 @@
 .credit-block h4 {
   font-size: 0.75vw;
   letter-spacing: 0.06em;
-  color: var(--gray-dark);
+  /* --gray-dark on --near-black is ~3.4:1, below the 4.5:1 WCAG AA floor
+     for this size; --gray clears ~9:1. (Unlike .bio-text .fade below, this
+     label has no later .revealed state to redeem it — it's low contrast
+     for good, so it gets the fix instead of a pass.) */
+  color: var(--gray);
   margin-bottom: 0.4vw;
   text-transform: uppercase;
 }
@@ -256,17 +287,18 @@
 }
 
 @media (max-width: 768px) {
-  /* No room for two columns: stack them with the sequence on top. It stops
-     being sticky here and reverts to a normal pinned hero — the matching JS
-     branch is in js/camera-sequence.js, keyed to this same 768px edge. */
+  /* No room for a full-bleed overlay: stack the sequence above the copy
+     instead of behind it. It stops being sticky here and reverts to a
+     normal pinned hero — the matching JS branch is in
+     js/camera-sequence.js, keyed to this same 768px edge. Switching
+     .about-split off grid also cancels the desktop grid-area:1/1 overlap
+     on its children, so they fall back into normal block flow. */
   .about-split {
-    flex-direction: column;
-    gap: 0;
+    display: block;
   }
   .about-split__media {
     order: -1; /* visually first; content stays first in the DOM */
     position: static;
-    flex: none;
     display: block;
     width: 100%;
     height: auto; /* the stage sets its own height; the caption flows below */
@@ -283,9 +315,12 @@
   }
   .about-split__content {
     width: 100%;
+    max-width: none; /* desktop caps this to keep copy off the full-bleed background; not overlaid here */
     display: block;
     min-height: 0; /* the desktop scroll floor is meaningless once pinned */
     padding-bottom: 0;
+    padding-right: 0;
+    background: none; /* desktop-only legibility scrim for the overlaid copy */
   }
   .about-body {
     flex-direction: column;
