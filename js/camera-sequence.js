@@ -362,10 +362,13 @@ document.addEventListener("DOMContentLoaded", () => {
   resize();
   window.addEventListener("resize", resize);
 
-  // Poster frame immediately; the remaining 239 wait for window `load`.
+  // Poster frame immediately; the remaining 239 wait for window `load`. The
+  // stage reveals as soon as this one frame is in — no reason to hold the
+  // whole section behind a 240-frame bar when frame 0 already renders.
   loadFrame(0, () => {
     setProgress(settled, FRAME_COUNT);
     requestRender();
+    markReady();
   });
 
   const startPreload = () => preloadAll();
