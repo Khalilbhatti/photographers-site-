@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // its category is at or before the current one in scroll order, and
   // returns to its queued spot the moment you scroll back past it — this
   // tracks scroll position live in both directions, not a one-way reveal.
-  const CATEGORY_ORDER = ["editorial", "portrait", "commercial"];
+  const CATEGORY_ORDER = ["dashboards", "websites", "mobile"];
   const RIGHT_MARGIN = window.innerWidth * 0.019; // matches the 1.9vw page gutter
   const SLOT_SPACING = 70; // px between staggered queue positions
 
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   tabs.forEach((tab) => {
     const cat = tab.dataset.cat;
-    const startsLocked = cat === CATEGORY_ORDER[0]; // editorial is active by default
+    const startsLocked = cat === CATEGORY_ORDER[0]; // dashboards is active by default
     gsap.set(tab, { x: startsLocked ? 0 : queuedOffset(cat) });
     tabShown.set(cat, startsLocked);
   });
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   measureCards();
-  setActiveCategory("editorial");
+  setActiveCategory("dashboards");
   buildScrollTrigger();
 
   // Re-measure whenever ScrollTrigger recalculates layout (resize, late

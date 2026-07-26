@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("projCategory").textContent = project.category;
   document.getElementById("projYear").textContent = project.year;
   document.getElementById("projTitle").textContent = project.title;
+  document.getElementById("projCompany").textContent = project.company || "";
   document.getElementById("projDescription").textContent = project.description;
   document.title = `${project.title} — M Khalil Ur Rehman`;
 

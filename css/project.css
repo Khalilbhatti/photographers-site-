@@ -105,6 +105,20 @@
   }
 }
 
+.project-company {
+  font-family: var(--display-font);
+  font-weight: 700;
+  font-size: 0.85vw;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gray-dark);
+  margin-top: -0.6vw;
+}
+
+.theme-dark .project-company {
+  color: var(--gray);
+}
+
 .project-description {
   font-family: var(--display-font);
   font-weight: 500;

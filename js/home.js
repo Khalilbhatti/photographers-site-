@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedSection = document.getElementById("selectedProjects");
   const hoverPrompt = document.getElementById("cardHoverPrompt");
   if (selectedSection && hoverPrompt && typeof PROJECTS !== "undefined") {
-    const slugs = ["road-trip", "visionnaire"];
+    const slugs = ["noloco", "premium-motors-web"];
     const blocks = [];
 
     slugs.forEach((slug) => {
