@@ -10,7 +10,7 @@
     <title>Project — M Khalil Ur Rehman</title>
     <meta
       name="description"
-      content="A photography project by M Khalil Ur Rehman, Paris-based portrait and editorial photographer."
+      content="A UI/UX design case study by M Khalil Ur Rehman, Senior UI/UX Designer based in Lahore, Pakistan."
     />
     <link rel="canonical" href="https://mkhalilurrehman.com/project.html" />
 
@@ -20,18 +20,18 @@
     <meta property="og:title" content="Project — M Khalil Ur Rehman" />
     <meta
       property="og:description"
-      content="A photography project by M Khalil Ur Rehman, Paris-based portrait and editorial photographer."
+      content="A UI/UX design case study by M Khalil Ur Rehman, Senior UI/UX Designer based in Lahore, Pakistan."
     />
     <meta property="og:url" content="https://mkhalilurrehman.com/project.html" />
     <meta property="og:image" content="https://mkhalilurrehman.com/images/og-cover.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Portrait photography by M Khalil Ur Rehman" />
+    <meta property="og:image:alt" content="M Khalil Ur Rehman — UI/UX Designer" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Project — M Khalil Ur Rehman" />
     <meta
       name="twitter:description"
-      content="A photography project by M Khalil Ur Rehman, Paris-based portrait and editorial photographer."
+      content="A UI/UX design case study by M Khalil Ur Rehman, Senior UI/UX Designer based in Lahore, Pakistan."
     />
     <meta name="twitter:image" content="https://mkhalilurrehman.com/images/og-cover.jpg" />
 
@@ -40,12 +40,25 @@
       type="image/svg+xml"
       href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjIiIHZpZXdCb3g9IjAgMCAyNCAyMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMjMuOTk4NSAwQzEzLjY0ODcgNS43NTU5MyAxMC4zNDgzIDUuNzU1OTMgMS45MDczNWUtMDYgLTEuMDQ5MDdlLTA2QzYuMjc3MyA5LjQ4NjUyIDYuMjc3MyAxMi41MTM1IDkuNDU2OThlLTA3IDIyQzEwLjM0OTggMTYuMjQ1NSAxMy42NTAyIDE2LjI0NTUgMjQgMjJDMTcuNzIxMiAxMi41MTM1IDE3LjcyMTIgOS40ODc5IDIzLjk5ODUgMFoiIGZpbGw9ImJsYWNrIiAvPgo8L3N2Zz4="
     />
-    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://mkhalilurrehman.com/#person","name":"M Khalil Ur Rehman","jobTitle":"Portrait Photographer","url":"https://mkhalilurrehman.com/","image":"https://mkhalilurrehman.com/images/og-cover.jpg","nationality":"French","workLocation":{"@type":"Place","name":"Paris, France"},"sameAs":["https://www.instagram.com/"]},{"@type":"WebSite","@id":"https://mkhalilurrehman.com/#website","url":"https://mkhalilurrehman.com/","name":"M Khalil Ur Rehman","publisher":{"@id":"https://mkhalilurrehman.com/#person"}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://mkhalilurrehman.com/#person","name":"M Khalil Ur Rehman","jobTitle":"UI/UX Designer","url":"https://mkhalilurrehman.com/","image":"https://mkhalilurrehman.com/images/og-cover.jpg","nationality":"Pakistani","workLocation":{"@type":"Place","name":"Lahore, Pakistan"},"sameAs":["https://www.behance.net/itskhalil","https://www.figma.com/@Itskhalil"]},{"@type":"WebSite","@id":"https://mkhalilurrehman.com/#website","url":"https://mkhalilurrehman.com/","name":"M Khalil Ur Rehman","publisher":{"@id":"https://mkhalilurrehman.com/#person"}}]}</script>
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/project.css" />
+    <link rel="stylesheet" href="css/flow-field-background.css" />
   </head>
   <body class="theme-dark">
     <a href="#main" class="skip-link">Skip to content</a>
+    <div
+      id="ambientBg"
+      class="flow-field-bg--ambient"
+      aria-hidden="true"
+      data-flow-field
+      data-color="#ffffff"
+      data-background="#0d0d0d"
+      data-trail-opacity="0.12"
+      data-particle-count="220"
+      data-speed="0.6"
+    ></div>
+
     <div id="loader">
       <h4>LOADING</h4>
       <div id="loader-mark"></div>
@@ -58,28 +71,27 @@
     </nav>
 
     <main class="project-layout" id="main">
-      <div class="project-scroll-wrap">
-        <div class="project-track" id="projectTrack">
-          <div class="project-hero-slide">
-            <div class="project-hero-info">
-              <div class="project-badges">
-                <span class="tag-pill" id="projCategory"></span>
-                <span class="tag-pill" id="projYear"></span>
-              </div>
-              <h1 class="project-title" id="projTitle"></h1>
-              <p class="project-description" id="projDescription"></p>
-              <div class="project-mark">✦</div>
-            </div>
-            <div class="project-hero-image" id="projHeroFrame">
-              <div class="media-scale">
-                <img id="projHeroImg" src="" alt="" />
-              </div>
-              <span class="reveal-curtain"></span>
-            </div>
-          </div>
-
-          <div class="project-gallery-track" id="projGallery"></div>
+      <div class="project-hero">
+        <div class="project-badges">
+          <span class="tag-pill" id="projCategory"></span>
+          <span class="tag-pill" id="projYear"></span>
         </div>
+        <h1 class="project-title" id="projTitle"></h1>
+        <p class="project-company" id="projCompany"></p>
+        <p class="project-description" id="projDescription"></p>
+        <div class="project-links">
+          <a href="https://www.behance.net/itskhalil" target="_blank" rel="noopener" class="pill-btn">
+            <span class="pill-fill"></span>
+            <span class="pill-label">Behance</span>
+            <span class="pill-arrow">↗</span>
+          </a>
+          <a href="https://www.figma.com/@Itskhalil" target="_blank" rel="noopener" class="pill-btn">
+            <span class="pill-fill"></span>
+            <span class="pill-label">Figma</span>
+            <span class="pill-arrow">↗</span>
+          </a>
+        </div>
+        <a href="works.html" class="link project-back">← Back to Work</a>
       </div>
     </main>
 
@@ -98,13 +110,6 @@
     ></script>
     <script
       defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
-      integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d"
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script
-      defer
       src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"
       integrity="sha384-tKsJDT6PlUI0pSBt9/sBKJluKgA19/a6mBrDsZaXotLB4ZYfMGM6xt6/WgGpYhTm"
       crossorigin="anonymous"
@@ -113,5 +118,6 @@
     <script defer src="js/project-data.js"></script>
     <script defer src="js/main.js"></script>
     <script defer src="js/project.js"></script>
+    <script defer src="js/flow-field-background.js"></script>
   </body>
 </html>
