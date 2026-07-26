@@ -26,24 +26,51 @@
   color: var(--gray);
 }
 
-/* No screenshots exist for these case studies (see js/project-data.js) —
-   this is a single-column text layout rather than the horizontal
-   image-parallax track works.css uses for the photography version of this
-   site, since there's nothing to scroll through. */
+/* Individual project pages scroll *horizontally*, same mechanism as the
+   works listing (see works.css/.js) — a vertical wheel gesture drives a
+   pinned track's translateX, with each image parallaxing within its own
+   frame at a different rate than the container moves. */
 .project-layout {
   position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 9vw 1.9vw 6vw;
+  height: 100vh;
 }
 
-.project-hero {
-  max-width: 44vw;
+.project-scroll-wrap {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.project-track {
+  display: flex;
+  height: 100vh;
+  will-change: transform;
+}
+
+/* Nested flex wrapper for the gallery slides so they continue the same
+   horizontal row as the hero slide (its own children lay out in a row,
+   same as .project-track does for its direct children). */
+.project-gallery-track {
+  display: flex;
+  flex-shrink: 0;
+  height: 100vh;
+}
+
+.project-hero-slide {
+  flex-shrink: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  padding-top: 5vw;
+}
+
+.project-hero-info {
+  width: 38vw;
+  flex-shrink: 0;
+  padding: 0 1.9vw;
   display: flex;
   flex-direction: column;
-  gap: 1.4vw;
+  justify-content: center;
+  gap: 1.6vw;
 }
 
 .project-badges {
@@ -55,80 +82,191 @@
   font-family: var(--display-font);
   font-weight: 900;
   text-transform: uppercase;
-  font-size: 4.2vw;
-  line-height: 0.95;
+  font-size: 4.6vw;
+  line-height: 0.9;
   letter-spacing: -0.02em;
+  opacity: 0;
+  transform: scaleY(1.6) translateY(10%);
+  transform-origin: bottom left;
 }
 
-.project-company {
-  font-family: var(--display-font);
-  font-weight: 700;
-  font-size: 0.95vw;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--gray);
+.project-title.is-revealed {
+  animation: project-title-in 0.9s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes project-title-in {
+  0% {
+    opacity: 0;
+    transform: scaleY(1.6) translateY(10%);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+  }
 }
 
 .project-description {
   font-family: var(--display-font);
   font-weight: 500;
-  font-size: 1.2vw;
-  line-height: 1.6;
+  font-size: 1.15vw;
+  line-height: 1.5;
+  color: var(--gray);
+  max-width: 30vw;
+}
+
+.project-mark {
+  font-size: 1.6vw;
   color: var(--gray);
 }
 
-.project-links {
+.project-hero-image {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* The scale/blur settle lives on this wrapper, not the <img> itself —
+   the <img> is left free for GSAP's parallax translateX so the two
+   transforms never fight over the same inline `transform` property. */
+.project-hero-image .media-scale {
+  width: 100%;
+  height: 100%;
+  transform: scale(1.2);
+  filter: blur(10px);
+  transition: transform 1.3s var(--ease), filter 1.1s var(--ease);
+  transition-delay: 0.2s;
+}
+
+.project-hero-image.is-revealed .media-scale {
+  transform: scale(1);
+  filter: blur(0);
+}
+
+.project-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Solid panel masking the image, lifted away on reveal rather than a
+   flat opacity fade — same "shape reveals the photograph" language as
+   the rest of the site's scroll transitions. */
+.reveal-curtain {
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+  transform-origin: top;
+  transform: scaleY(1);
+  transition: transform 0.95s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.project-hero-image.is-revealed .reveal-curtain {
+  transform: scaleY(0);
+}
+
+/* Gallery slides: alternate between a large full-height image and a
+   smaller inset one (framed by generous margins), echoing the varied
+   image scale seen in the reference's own horizontal galleries. */
+.project-gallery-slide {
+  flex-shrink: 0;
+  height: 100vh;
+  width: 42vw;
   display: flex;
-  gap: 1vw;
-  margin-top: 0.6vw;
+  align-items: center;
+  justify-content: center;
+  padding: 4vw 1vw;
 }
 
-.project-links .pill-btn {
-  padding: 0.6vw 1.8vw;
+.project-gallery-slide.is-inset {
+  width: 34vw;
 }
 
-.project-links .pill-label {
-  font-size: 1.3vw;
+.gallery-frame {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
-.project-links .pill-arrow {
-  font-size: 1.1vw;
+.project-gallery-slide.is-inset .gallery-frame {
+  height: 70%;
+  border-radius: 0.3vw;
 }
 
-.project-back {
-  margin-top: 1.4vw;
-  width: fit-content;
-  font-family: var(--display-font);
-  font-weight: 600;
-  font-size: 0.9vw;
-  color: var(--gray);
-  transition: color 0.25s var(--ease);
+/* Same split as the hero: scale/blur settle on the wrapper, GSAP's
+   parallax translateX owns the <img>'s transform exclusively. */
+.gallery-frame .media-scale {
+  width: 100%;
+  height: 100%;
+  transform: scale(1.25);
+  filter: blur(8px);
+  transition: transform 1.15s var(--ease), filter 0.9s var(--ease);
+  transition-delay: 0.1s;
 }
 
-.project-back:hover {
-  color: var(--white);
+.gallery-frame.is-revealed .media-scale {
+  transform: scale(1);
+  filter: blur(0);
+}
+
+.gallery-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Full-bleed slides lift their curtain top-to-bottom; inset slides
+   (narrower, framed) lift theirs left-to-right — alternating direction
+   echoes the alternating width rhythm already used across the track. */
+.gallery-frame .reveal-curtain {
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+  transform-origin: top;
+  transform: scaleY(1);
+  transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.project-gallery-slide.is-inset .reveal-curtain {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+.gallery-frame.is-revealed .reveal-curtain {
+  transform: scaleY(0);
+}
+
+.project-gallery-slide.is-inset .gallery-frame.is-revealed .reveal-curtain {
+  transform: scaleX(0);
 }
 
 @media (max-width: 768px) {
-  .project-layout {
-    padding: 26vw 4vw 10vw;
+  .project-hero-slide {
+    flex-direction: column;
+    width: 100vw;
+    padding-top: 24vw;
   }
-  .project-hero {
-    max-width: none;
+  .project-hero-info {
+    width: 100%;
   }
   .project-title {
     font-size: 11vw;
   }
-  .project-company {
-    font-size: 3vw;
-  }
   .project-description {
-    font-size: 4vw;
+    max-width: none;
+    font-size: 3.6vw;
   }
-  .project-links .pill-label {
-    font-size: 4.5vw;
+  .project-hero-image {
+    height: 60vh;
   }
-  .project-links .pill-arrow {
-    font-size: 3.5vw;
+  .project-gallery-slide,
+  .project-gallery-slide.is-inset {
+    width: 90vw;
   }
 }

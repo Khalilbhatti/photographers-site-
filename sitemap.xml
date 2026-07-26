@@ -1,39 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  project.html is deliberately absent: all 19 case studies are served from
-  that one URL via ?slug=, so listing it would submit a single generic page
-  rather than 19 distinct ones. Pre-rendering a static page per project is
+  project.html is deliberately absent: all 17 projects are served from that
+  one URL via ?slug=, so listing it would submit a single generic page
+  rather than 17 distinct ones. Pre-rendering a static page per project is
   the fix, and those entries belong here once it exists.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mkhalilurrehman.com/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mkhalilurrehman.com/works.html</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://mkhalilurrehman.com/gallery.html</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://mkhalilurrehman.com/about.html</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://mkhalilurrehman.com/resume.html</loc>
-    <lastmod>2026-07-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
 </urlset>

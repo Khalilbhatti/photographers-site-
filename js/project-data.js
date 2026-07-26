@@ -1,166 +1,152 @@
 // Shared project data for project.html — one entry per work card in
-// works.html (slugs match each card's data-id). Sourced directly from the
-// resume: titles, companies, and categories are real; descriptions expand
-// on the resume's one-line bullets into fuller case-study copy, since no
-// screenshots exist to carry the detail visually instead.
+// works.html (slugs match each card's data-id). Descriptions are original
+// placeholder copy, not sourced from any real project.
 const PROJECTS = {
-  // ---- HexaTech Solution — Dashboards & Admin Panels ----
-  noloco: {
-    title: "Noloco Dashboard",
-    category: "dashboards",
-    company: "HexaTech Solution",
-    year: "2025",
+  "road-trip": {
+    title: "Road Trip",
+    category: "editorial",
+    year: "2023",
     description:
-      "An admin dashboard UI built around Noloco's no-code data layer — designed for fast scanning of records and status at a glance, with a component system that stays consistent as new data views get added.",
+      "A loose, unscripted series shot across a week on the road — motion, light, and the in-between moments that don't usually make the cut.",
   },
-  mca: {
-    title: "MCA Dashboard",
-    category: "dashboards",
-    company: "HexaTech Solution",
-    year: "2025",
+  visionnaire: {
+    title: "Visionnaire",
+    category: "editorial",
+    year: "2024",
     description:
-      "A management/compliance-style dashboard focused on clear data hierarchy: the pages that matter most surface first, with drill-down views kept out of the way until they're needed.",
+      "A study in texture and restraint: minimal sets, natural light, and wardrobe pared back until only the silhouette remains.",
   },
-  "hello-uptown-admin": {
-    title: "Hello Uptown Admin Dashboard",
-    category: "dashboards",
-    company: "HexaTech Solution",
-    year: "2025",
+  santacruz: {
+    title: "Santacruz",
+    category: "editorial",
+    year: "2023",
     description:
-      "The internal admin panel behind the Hello Uptown product — built for the operations team running the platform day to day, prioritising speed of common tasks over visual flourish.",
+      "Shot over two days on location, leaning into harsh midday light rather than fighting it — contrast as the whole point.",
   },
-  "hello-uptown-business": {
-    title: "Hello Uptown Business Dashboard",
-    category: "dashboards",
-    company: "HexaTech Solution",
-    year: "2025",
+  "summer-market": {
+    title: "Summer Market",
+    category: "editorial",
+    year: "2023",
     description:
-      "A separate business-facing dashboard for Hello Uptown's partners/clients, sharing the product's visual language with the admin panel while scoping what each audience actually needs to see.",
+      "A candid documentary-style set built around a single location, favouring found moments over posed ones.",
   },
-  "finance-management": {
-    title: "Finance Management Dashboard",
-    category: "dashboards",
-    company: "HexaTech Solution",
-    year: "2025",
+  "color-mvdior": {
+    title: "Color Mvdior",
+    category: "editorial",
+    year: "2024",
     description:
-      "A finance-tracking dashboard emphasising clear numeric hierarchy — totals, trends, and line items each get their own visual weight so the page reads correctly at a glance, not just on close inspection.",
+      "Saturated gels and a single hard key light — an exercise in pushing colour as far as it can go without losing the subject.",
   },
-  "crypto-management": {
-    title: "Crypto Management Dashboard",
-    category: "dashboards",
-    company: "HexaTech Solution",
-    year: "2025",
+  cloud: {
+    title: "Cloud",
+    category: "portrait",
+    year: "2024",
     description:
-      "A portfolio/asset-tracking dashboard for crypto holdings, designed around real-time-feeling data density without tipping into visual noise.",
+      "A quiet studio portrait series, stripped of everything but the subject and a single soft source.",
   },
-  "company-organogram": {
-    title: "Company Organogram",
-    category: "dashboards",
-    company: "HexaTech Solution — Figma AI-Based Project",
-    year: "2025",
+  "dj-dre-tala": {
+    title: "DJ Dre Tala",
+    category: "portrait",
+    year: "2023",
     description:
-      "An AI-assisted Figma project generating a clean, navigable organizational chart — structuring reporting lines and team hierarchy as an interactive rather than static document.",
+      "Backstage and on-stage portraits shot across a single night, chasing available light rather than adding to it.",
   },
-  "ab-price-guard": {
-    title: "AB Price Guard Pro",
-    category: "dashboards",
-    company: "HexaTech Solution — Figma AI-Based Project",
-    year: "2025",
+  hoshi: {
+    title: "Hoshi",
+    category: "portrait",
+    year: "2024",
     description:
-      "An AI-assisted Figma project for a pricing/monitoring tool, focused on surfacing price changes and alerts in a scannable, dashboard-style layout.",
+      "A close, intimate set built entirely around expression — minimal retouching, maximal presence.",
   },
-
-  // ---- HexaTech Solution — Web & Website Projects ----
-  "premium-motors-web": {
-    title: "Premium Motors Website",
-    category: "websites",
-    company: "HexaTech Solution",
-    year: "2025",
+  "le-motif": {
+    title: "Le Motif",
+    category: "portrait",
+    year: "2023",
     description:
-      "A dealership website UI balancing inventory browsing with brand presentation — built to make a large vehicle catalogue feel curated rather than overwhelming.",
+      "Portraits built around repetition and pattern in the wardrobe, echoed in the framing of each shot.",
   },
-  "hello-uptown-web": {
-    title: "Hello Uptown Website",
-    category: "websites",
-    company: "HexaTech Solution",
-    year: "2025",
+  "13block": {
+    title: "13 Block",
+    category: "portrait",
+    year: "2024",
     description:
-      "The public-facing marketing site for Hello Uptown, sharing design language with its admin and business dashboards so the whole product feels like one system rather than three separate builds.",
+      "A gritty, high-contrast series shot on location — raw locations standing in for a studio backdrop.",
   },
-  petcare: {
-    title: "PetCare Website",
-    category: "websites",
-    company: "HexaTech Solution",
-    year: "2025",
+  "earvinho-kawazaki": {
+    title: "Earvinho Kawazaki",
+    category: "portrait",
+    year: "2023",
     description:
-      "A pet-services website UI designed to feel warm and approachable while still handling the practical job of booking and service information clearly.",
+      "A collaborative portrait sitting, built around long exposures and slow, deliberate direction.",
   },
-  marketdeals: {
-    title: "Marketdeals.pk",
-    category: "websites",
-    company: "Flying Cement Co. LTD",
-    year: "2021–2023",
+  malo: {
+    title: "Malo",
+    category: "portrait",
+    year: "2024",
     description:
-      "Designed, built, and managed end to end — UI design, website build, and SEO — for Marketdeals.pk, in parallel with UI work on its companion Android app. Handled as the site's full owner: design, development, and search visibility.",
+      "Natural light portraits shot at golden hour, letting the falloff do most of the work.",
   },
-  zarea: {
-    title: "Zarea.pk",
-    category: "websites",
-    company: "Vision 2A",
-    year: "2020–2021",
+  oppo: {
+    title: "Oppo",
+    category: "commercial",
+    year: "2024",
     description:
-      "Front-end design and UI for Zarea.pk, alongside backend contribution — an early full-stack-adjacent role that shaped how closely the design work stayed tied to what was actually feasible to ship.",
+      "A product-led campaign balancing clean studio work with lifestyle shots on location.",
   },
-
-  // ---- HexaTech Solution — Mobile Applications ----
-  "premium-motors-app": {
-    title: "Premium Motors Mobile App",
-    category: "mobile",
-    company: "HexaTech Solution",
-    year: "2025",
+  adidas: {
+    title: "Adidas",
+    category: "commercial",
+    year: "2023",
     description:
-      "The mobile counterpart to the Premium Motors website — vehicle browsing and inquiry flows adapted for a smaller screen without losing the catalogue's sense of scale.",
+      "Athletic movement captured at high shutter speed, paired with static hero shots for the campaign key art.",
   },
-  "hello-uptown-app": {
-    title: "Hello Uptown Mobile App",
-    category: "mobile",
-    company: "HexaTech Solution",
-    year: "2025",
+  asics: {
+    title: "Asics",
+    category: "commercial",
+    year: "2023",
     description:
-      "The consumer-facing mobile app in the Hello Uptown product family, extending the same design system used across its web dashboards into a native mobile context.",
+      "A performance-driven set shot in-studio, prioritising clarity and precision over mood.",
   },
-  "music-ilu": {
-    title: "Music-Ilu Mobile App",
-    category: "mobile",
-    company: "HexaTech Solution",
-    year: "2025",
+  braave: {
+    title: "Braave",
+    category: "commercial",
+    year: "2024",
     description:
-      "A music app UI where the core design problem was browsing/discovery — keeping large catalogues navigable through clear hierarchy rather than relying on decoration.",
+      "A brand campaign shot across three locations in a single day, unified by a consistent, muted palette.",
   },
-  parko: {
-    title: "Parko Mobile App",
-    category: "mobile",
-    company: "HexaTech Solution",
-    year: "2025",
+  mobilize: {
+    title: "Mobilize",
+    category: "commercial",
+    year: "2024",
     description:
-      "A parking-focused app UI built around quick in-the-moment decisions — find, book, pay — so the interface stays out of the way of a task usually done one-handed, in a hurry.",
-  },
-  financia: {
-    title: "Financia Mobile App",
-    category: "mobile",
-    company: "HexaTech Solution",
-    year: "2025",
-    description:
-      "A personal-finance app UI applying the same clear-numeric-hierarchy approach as the Finance Management Dashboard, adapted for mobile-first, glanceable use.",
-  },
-  "patient-care": {
-    title: "Patient Care",
-    category: "mobile",
-    company: "Flying Cement Co. LTD",
-    year: "2021–2023",
-    description:
-      "UI design for an Android healthcare application — designed for a user base that skews less tech-comfortable, prioritising clarity and large, unambiguous touch targets over density.",
+      "Automotive and lifestyle imagery shot side by side, built to work as both editorial and ad key art.",
   },
 };
 
+// Every project's hero + gallery cycles through the photographer's real
+// portfolio photos (see images/), offset per project (stride 5 = 1 hero
+// + 4 gallery slots) so consecutive projects don't show an identical set.
+const REAL_PHOTOS = [
+  "images/3g0a9005.webp",
+  "images/AVE20231220_18444255_0090.webp",
+  "images/ELECTRICK-1.webp",
+  "images/LARELEVE-1.webp",
+  "images/LARELEVE-5.webp",
+  "images/come-up-img1.webp",
+  "images/come-up-img2.webp",
+  "images/denzelcurry14822.webp",
+  "images/peugeot_153.webp",
+  "images/portraits-11_benoitmagimel.webp",
+  "images/portraits-5_danibumba.webp",
+  "images/summer-cover-selected.webp",
+];
 const PROJECT_SLUGS = Object.keys(PROJECTS);
+
+PROJECT_SLUGS.forEach((slug, i) => {
+  const gallery = [];
+  for (let g = 0; g < 4; g++) {
+    gallery.push(REAL_PHOTOS[(i * 5 + g) % REAL_PHOTOS.length]);
+  }
+  PROJECTS[slug].hero = REAL_PHOTOS[(i * 5 + 4) % REAL_PHOTOS.length];
+  PROJECTS[slug].gallery = gallery;
+});

@@ -269,8 +269,7 @@
   text-transform: uppercase;
 }
 
-.credit-block a,
-.credit-block__value {
+.credit-block a {
   font-family: var(--display-font);
   font-weight: 700;
   font-size: 1vw;

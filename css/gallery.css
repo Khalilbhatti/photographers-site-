@@ -1,97 +1,162 @@
-.skills-layout {
+.gallery-stage {
   position: relative;
-  z-index: 1;
-  max-width: 60vw;
-  margin: 0 auto;
-  padding: 9vw 1.9vw 6vw;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--near-black);
 }
 
-.skills-title {
+#galleryCanvas {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+}
+
+#galleryCanvas:active {
+  cursor: grabbing;
+}
+
+/* Dark scrim over the (already-rendering) playground canvas while the
+   draw-to-open gate is up -- the scattered photos are meant to be
+   barely visible behind it, not hidden outright. Fades away once the
+   shape below is fully traced. */
+.gallery-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.86);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+}
+
+.gallery-title {
   font-family: var(--display-font);
   font-weight: 900;
   text-transform: uppercase;
-  font-size: 6vw;
-  line-height: 0.86;
-  letter-spacing: -0.02em;
+  font-size: 6.6vw;
+  line-height: 0.88;
+  color: var(--white);
 }
 
-.skills-grid {
-  margin-top: 4vw;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+/* ---------- Draw-to-open gate ----------
+   The site's own diamond mark (see images/svg-star.svg, reused here
+   inline so its stroke can be drawn) rendered as a dashed outline; a
+   ring of small circles sampled along that same path fills in orange
+   as the cursor passes near each one, reading as the shape "filling
+   in" as the user traces it. */
+.draw-shape {
+  margin-top: 2.6vw;
+  width: 9.5vw;
+  pointer-events: auto;
+  cursor: crosshair;
 }
 
-.skill-card {
-  background: var(--near-black);
-  padding: 2vw;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8vw;
-  min-height: 14vw;
+#drawSvg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
 
-.skill-card__num {
-  font-family: var(--display-font);
-  font-weight: 700;
-  font-size: 0.85vw;
+.draw-path-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 0.35;
+  stroke-dasharray: 1 0.9;
+}
+
+.draw-dot {
+  fill: #f2994a;
+  opacity: 0;
+  transform: scale(0);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.15s var(--ease), transform 0.15s var(--ease);
+}
+
+.draw-dot.is-touched {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.draw-hint {
+  margin-top: 1.6vw;
+  font-size: 0.8vw;
+  letter-spacing: 0.08em;
   color: var(--gray);
-}
-
-.skill-card h2 {
-  font-family: var(--display-font);
-  font-weight: 800;
   text-transform: uppercase;
-  font-size: 1.3vw;
-  line-height: 1.05;
 }
 
-.skill-card p {
-  font-size: 0.85vw;
-  line-height: 1.5;
+.ruler {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2.4vw;
+  padding: 0 1.9vw;
+  z-index: 300;
+  pointer-events: none;
+}
+
+.ruler-track {
+  position: relative;
+  height: 2.4vw;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.ruler-tick {
+  width: 1px;
+  height: 0.7vw;
+  background: rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+.ruler-tick.major {
+  height: 1.2vw;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.ruler-tick.major span {
+  position: absolute;
+  bottom: 1.6vw;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7vw;
   color: var(--gray);
 }
 
-.skills-proficient {
-  margin-top: 3.5vw;
-  padding-top: 2.4vw;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex;
-  flex-direction: column;
-  gap: 1.2vw;
-}
-
-.skills-proficient__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8vw;
+.ruler-cursor {
+  position: absolute;
+  bottom: 0;
+  width: 2px;
+  height: 1.6vw;
+  background: var(--white);
+  transform: translateX(-50%);
+  transition: left 0.05s linear;
 }
 
 @media (max-width: 768px) {
-  .skills-layout {
-    max-width: none;
-    padding: 26vw 4vw 10vw;
+  .gallery-title {
+    font-size: 12vw;
   }
-  .skills-title {
-    font-size: 13vw;
+  .draw-shape {
+    width: 26vw;
   }
-  .skills-grid {
-    grid-template-columns: 1fr;
+  .draw-hint {
+    font-size: 2.4vw;
   }
-  .skill-card {
-    min-height: 0;
-    padding: 5vw;
-    gap: 2vw;
-  }
-  .skill-card__num {
-    font-size: 3vw;
-  }
-  .skill-card h2 {
-    font-size: 5.5vw;
-  }
-  .skill-card p {
-    font-size: 3.6vw;
+  .ruler-tick.major span {
+    font-size: 2vw;
   }
 }

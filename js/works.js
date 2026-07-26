@@ -33,16 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let cardMetrics = [];
   function measureCards() {
     cardMetrics = allCards.map((card) => ({
-      // No screenshots in this case-study data (see project-data.js), so
-      // the parallax drifts the card's typographic glyph instead of a
-      // photo — same layered-depth effect, no image required.
-      img: card.querySelector(".work-card__glyph"),
+      img: card.querySelector("img"),
       cat: card.dataset.cat,
       mid: card.offsetLeft + card.offsetWidth / 2,
     }));
   }
 
-  // Each card's glyph drifts slightly slower/faster than its container as
+  // Each card's image drifts slightly slower/faster than its container as
   // the horizontal track moves, so the whole gallery reads as layered
   // rather than a single flat strip translating in lockstep.
   function applyCardParallax(trackX) {
@@ -72,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // its category is at or before the current one in scroll order, and
   // returns to its queued spot the moment you scroll back past it — this
   // tracks scroll position live in both directions, not a one-way reveal.
-  const CATEGORY_ORDER = ["dashboards", "websites", "mobile"];
+  const CATEGORY_ORDER = ["editorial", "portrait", "commercial"];
   const RIGHT_MARGIN = window.innerWidth * 0.019; // matches the 1.9vw page gutter
   const SLOT_SPACING = 70; // px between staggered queue positions
 
@@ -92,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   tabs.forEach((tab) => {
     const cat = tab.dataset.cat;
-    const startsLocked = cat === CATEGORY_ORDER[0]; // dashboards is active by default
+    const startsLocked = cat === CATEGORY_ORDER[0]; // editorial is active by default
     gsap.set(tab, { x: startsLocked ? 0 : queuedOffset(cat) });
     tabShown.set(cat, startsLocked);
   });
@@ -157,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   measureCards();
-  setActiveCategory("dashboards");
+  setActiveCategory("editorial");
   buildScrollTrigger();
 
   // Re-measure whenever ScrollTrigger recalculates layout (resize, late
